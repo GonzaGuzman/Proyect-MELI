@@ -2,6 +2,8 @@
 
 Este repositorio contiene el challenge técnico de MercadoLibre, creado por Gonzalo Guzmán.
 
+Contacto: https://www.linkedin.com/in/gonzalo-guzman/
+
 # Primeros pasos
 
 Para poder correr el proyecto se debe contar con el IDE Android Studio
