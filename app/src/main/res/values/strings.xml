@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Proyect MELI</string>
+    <string name="newState">new</string>
+    <string name="newStateSpanish">NUEVO</string>
+    <string name="usedState">USADO</string>
+    <string name="searchInMELI">Buscar en MercadoLibre</string>
+    <string name="recentlySeen">Visto recientemente</string>
+    <string name="viewBrowsingHistory">Ver historial de navegación</string>
+    <string name="searchInMercadolibre">Buscar en Mercado Libre</string>
+    <string name="state_sold">Estado %1$s / Vendidos %2$s</string>
+    <string name="saveSuccesfullyItem">save successfully item in database</string>
+    <string name="error_message">UPS ALGO SALIO MAL %1$s</string>
+    <string name="existing_id_in_database">Existing ID in database</string>
+</resources>

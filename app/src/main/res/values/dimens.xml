@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="matchConstraint">0dp</dimen>
+    <dimen name="density6">6dp</dimen>
+    <dimen name="density16">16dp</dimen>
+    <dimen name="density8">8dp</dimen>
+    <dimen name="density10">10dp</dimen>
+    <dimen name="scaleable16">16sp</dimen>
+    <dimen name="density250">250dp</dimen>
+    <dimen name="scaleable26">26sp</dimen>
+    <dimen name="density50">50dp</dimen>
+    <dimen name="density5">5dp</dimen>
+    <dimen name="density4">4dp</dimen>
+    <dimen name="scaleable18">18sp</dimen>
+    <dimen name="density100">100dp</dimen>
+    <dimen name="scaleable14">14sp</dimen>
+    <dimen name="density1">1dp</dimen>
+    <dimen name="density128">128dp</dimen>
+</resources>

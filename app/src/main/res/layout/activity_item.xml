@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.item.ItemActivity">
+
+    <include
+        android:id="@+id/toolbarSearchItem"
+        layout="@layout/top_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/matchConstraint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarSearchItem">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/density16"
+                android:layout_marginTop="@dimen/density16"
+                android:layout_marginEnd="@dimen/density16"
+                android:textColor="#B6B5B5" />
+
+            <TextView
+                android:id="@+id/txtNameDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvState"
+                android:layout_marginTop="@dimen/density8"
+                android:padding="@dimen/density10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/scaleable16"
+                tools:text="phone" />
+
+            <ImageView
+                android:id="@+id/imgProfileDetails"
+                android:layout_width="@dimen/density250"
+                android:layout_height="@dimen/density250"
+                android:layout_below="@+id/txtNameDetails"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/density8"
+                tools:src="@drawable/ic_baseline_search_24" />
+
+            <TextView
+                android:id="@+id/txtPriceDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imgProfileDetails"
+                android:layout_marginTop="@dimen/density8"
+                android:padding="@dimen/density10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/scaleable26"
+                tools:text="$4.900" />
+
+            <Button
+                android:id="@+id/btnGoTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtPriceDetails"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/density50"
+                android:text="@string/searchInMELI"
+                android:textAllCaps="false" />
+
+        </RelativeLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

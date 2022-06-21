@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DCD9D9"
+    tools:context=".activities.home.HomeActivity">
+
+    <include
+        android:id="@+id/toolbarSearchHome"
+        layout="@layout/top_toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/matchConstraint"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarSearchHome">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/itemRecentlySeen"
+                layout="@layout/recently_seen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/density6"
+                android:layout_marginTop="@dimen/density6"
+                android:layout_marginEnd="@dimen/density6"
+                android:layout_marginBottom="@dimen/density6" />
+
+            <include
+                android:id="@+id/layoutCategories"
+                layout="@layout/card_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/itemRecentlySeen"
+                android:layout_marginStart="@dimen/density6"
+                android:layout_marginTop="@dimen/density6"
+                android:layout_marginEnd="@dimen/density6"
+                android:layout_marginBottom="@dimen/density6" />
+
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

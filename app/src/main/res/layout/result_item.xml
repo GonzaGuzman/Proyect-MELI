@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardItems"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/density8"
+    android:elevation="@dimen/density10"
+    app:cardCornerRadius="@dimen/density10">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/density10">
+
+        <ImageView
+            android:id="@+id/ivProduct"
+            android:layout_width="@dimen/density128"
+            android:layout_height="@dimen/density128"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvNameProduct"
+            android:layout_width="@dimen/matchConstraint"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivProduct"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivProduct" />
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvNameProduct"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@id/tvNameProduct"
+            app:layout_constraintStart_toStartOf="@id/tvNameProduct"
+            app:layout_constraintTop_toBottomOf="@id/tvNameProduct" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

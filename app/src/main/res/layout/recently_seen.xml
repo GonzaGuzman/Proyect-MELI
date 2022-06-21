@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/density16"
+    android:background="@drawable/radius_edittext"
+    android:elevation="@dimen/density5"
+    app:cardCornerRadius="@dimen/density8"
+    app:shapeAppearanceOverlay="@drawable/radius_edittext">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvRecyclerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/density4"
+            android:text="@string/recentlySeen"
+            android:textSize="@dimen/scaleable18"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardItemsRecently"
+            android:layout_width="@dimen/matchConstraint"
+            android:layout_height="@dimen/density100"
+            app:layout_constraintBottom_toTopOf="@id/divider2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageRecentlySeen"
+                    android:layout_width="@dimen/density100"
+                    android:layout_height="@dimen/density100"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@mipmap/image_movile" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="@dimen/matchConstraint"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/density4"
+                    android:layout_marginTop="@dimen/density4"
+                    android:gravity="start"
+                    android:textSize="@dimen/scaleable14"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/imageRecentlySeen"
+                    app:layout_constraintTop_toTopOf="@id/imageRecentlySeen"
+                    tools:text="Smartphone" />
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="@dimen/matchConstraint"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/density4"
+                    android:layout_marginTop="@dimen/density4"
+                    android:gravity="start"
+                    android:textSize="@dimen/scaleable16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/imageRecentlySeen"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                    tools:text="$ 65.000" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="@dimen/matchConstraint"
+            android:layout_height="@dimen/density1"
+            android:layout_marginTop="@dimen/density4"
+            android:layout_marginBottom="@dimen/density4"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRecyclerName" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="@dimen/matchConstraint"
+            android:layout_height="@dimen/density1"
+            android:layout_marginTop="@dimen/density4"
+            android:layout_marginBottom="@dimen/density4"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardItemsRecently" />
+
+        <Button
+            android:id="@+id/bottomNavigationTo"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/matchConstraint"
+            android:layout_margin="@dimen/density4"
+            android:backgroundTint="@color/white"
+            android:drawableEnd="@drawable/ic_baseline_chevron_right_blue"
+            android:gravity="center_vertical"
+            android:text="@string/viewBrowsingHistory"
+            android:textAppearance="@style/Theme.AppCompat.Dialog"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/cardItemsRecently"
+            app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
