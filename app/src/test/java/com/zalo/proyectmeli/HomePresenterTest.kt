@@ -6,8 +6,8 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.zalo.proyectmeli.datasource.home.HomeDatasource
-import com.zalo.proyectmeli.network.models.Categories
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.Categories
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import com.zalo.proyectmeli.presenter.home.HomePresenter
 import com.zalo.proyectmeli.presenter.home.HomeView
 import io.reactivex.rxjava3.disposables.Disposable
@@ -61,7 +61,7 @@ class HomePresenterTest {
         getCategoryListSuccessfully()
         val listOfCategories = Mockito.mock(listOf<Categories>()::class.java)
         //WHEN
-        homePresenter.initRecyclerCategories()
+        homePresenter.initComponent()
         //THEN
         assertEquals(homeView.onCategoryFetched(listOf()),
             homeView.onCategoryFetched(listOfCategories))
@@ -76,7 +76,7 @@ class HomePresenterTest {
         getCategoryListUnsuccessfully()
         whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
         //WHEN
-        homePresenter.initRecyclerCategories()
+        homePresenter.initComponent()
         //THEN
         verify(homeView).showSnackBar(String.format(THIS_FAILED, FAIL))
         verify(homeView).loadRecycler()
@@ -89,7 +89,7 @@ class HomePresenterTest {
         getCategoryListSuccessfully()
         val listOfCategories = Mockito.mock(listOf<Categories>()::class.java)
         //WHEN
-        homePresenter.initRecyclerCategories()
+        homePresenter.initComponent()
         //THEN
         assertEquals(homeView.onCategoryFetched(listOf()),
             homeView.onCategoryFetched(listOfCategories))
@@ -114,7 +114,7 @@ class HomePresenterTest {
         //WHEN
         homePresenter.showItemListDb()
         //THEN
-        verify(homeView).showListDb()
+        verify(homeView).showHistoryDb()
     }
 
     @Test

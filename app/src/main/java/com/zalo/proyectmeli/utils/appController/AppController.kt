@@ -1,12 +1,12 @@
-package com.zalo.proyectmeli.utils.applicationClass
+package com.zalo.proyectmeli.utils.appController
 
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.zalo.proyectmeli.BuildConfig.ITEM_DATABASE
 import com.zalo.proyectmeli.database.ItemDatabase
+import com.zalo.proyectmeli.utils.ITEM_DATABASE
 
-class MLApplication : Application() {
+class AppController : Application() {
     override fun onCreate() {
         super.onCreate()
         preferences = getSharedPreferences("mlPreferences", 0)

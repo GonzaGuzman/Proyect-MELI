@@ -2,25 +2,27 @@ package com.zalo.proyectmeli.presenter.detail
 
 import android.content.Intent
 import android.content.res.Resources
+import android.util.Log
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.datasource.detail.DetailDatasource
-import com.zalo.proyectmeli.network.models.ProductDataResponse
+import com.zalo.proyectmeli.utils.models.ProductDataResponse
 import com.zalo.proyectmeli.utils.CAT_ID
 import com.zalo.proyectmeli.utils.KEY_SEARCH
 import com.zalo.proyectmeli.utils.TYPE_SHOW
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-
 class DetailPresenter(
     private val detailView: DetailView,
     private val detailDatasource: DetailDatasource,
     private val resources: Resources,
 ) : DetailPresenterActions {
     private val compositeDisposable = CompositeDisposable()
+    private val TAG = "DetailPresenter"
 
     override fun initComponent(intent: Intent) {
         loadFetched(intent)
         detailView.loadRecycler()
-        detailView.textSearch()
+        detailView.navigateToSearch()
+        detailView.onBack()
     }
 
     override fun loadFetched(intent: Intent) {
@@ -47,8 +49,8 @@ class DetailPresenter(
                     detailView.loadGone()
                 },
                 {
-                    detailView.showSnackBar(String.format(resources.getString(R.string.error_message),
-                        it.message))
+                    detailView.showSnackBar(resources.getString(R.string.error_message))
+                    Log.e(TAG,it.message.toString())
                 }
             )
         )
@@ -62,8 +64,8 @@ class DetailPresenter(
                     detailView.loadGone()
                 },
                 {
-                    detailView.showSnackBar(String.format(resources.getString(R.string.error_message),
-                        it.message))
+                    detailView.showSnackBar(resources.getString(R.string.error_message))
+                    Log.e(TAG,it.message.toString())
                 }
             )
         )
@@ -77,11 +79,15 @@ class DetailPresenter(
                     detailView.loadGone()
                 },
                 {
-                    detailView.showSnackBar(String.format(resources.getString(R.string.error_message),
-                        it.message))
+                    detailView.showSnackBar(resources.getString(R.string.error_message))
+                    Log.e(TAG,it.message.toString())
                 }
             )
         )
+    }
+
+    override fun navigateToSearch() {
+        detailView.navigateToSearch()
     }
 }
 

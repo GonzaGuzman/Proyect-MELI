@@ -1,4 +1,4 @@
-package com.zalo.proyectmeli.network.models
+package com.zalo.proyectmeli.utils.models
 
 import androidx.annotation.NonNull
 import androidx.room.Entity
@@ -22,9 +22,21 @@ data class ProductResponse(
     @SerializedName("price") val price: Double,
     @SerializedName("sold_quantity") val soldQuantity: Int,
     @SerializedName("permalink") val permaLink: String,
+    @SerializedName("available_quantity") val stock: Int,
 )
 
 data class ProductDataResponse(
     @SerializedName("results") val products: List<ProductResponse>,
 )
 
+data class DescriptionResponse(
+    @SerializedName("text") val text: String,
+    @SerializedName("plain_text") val plainText: String,
+)
+
+@Entity(tableName = "searchHistory")
+data class SearchHistory(
+    @PrimaryKey
+    val textSearch: String,
+    val orderId: Int,
+)

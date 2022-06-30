@@ -1,45 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardItems"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/density8"
+    android:layout_margin="@dimen/density1"
     android:elevation="@dimen/density10"
     app:cardCornerRadius="@dimen/density10">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/density10">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/ivProduct"
             android:layout_width="@dimen/density128"
             android:layout_height="@dimen/density128"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="@dimen/density4"
+            android:background="@drawable/border_radius"
+            android:padding="@dimen/density4"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@mipmap/image_movile" />
 
         <TextView
             android:id="@+id/tvNameProduct"
             android:layout_width="@dimen/matchConstraint"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ivProduct"
-            android:textAlignment="center"
+            android:layout_marginStart="@dimen/density4"
+            android:layout_marginTop="@dimen/density4"
+            android:gravity="start"
+            android:textColor="#090505"
+            android:textSize="@dimen/scaleable14"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivProduct" />
+            app:layout_constraintStart_toEndOf="@id/ivProduct"
+            app:layout_constraintTop_toTopOf="@id/ivProduct"
+            tools:text="Smartphone" />
 
         <TextView
             android:id="@+id/tvPrice"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/matchConstraint"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvNameProduct"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="@id/tvNameProduct"
-            app:layout_constraintStart_toStartOf="@id/tvNameProduct"
-            app:layout_constraintTop_toBottomOf="@id/tvNameProduct" />
-
+            android:layout_marginStart="@dimen/density4"
+            android:layout_marginTop="@dimen/density4"
+            android:gravity="start"
+            android:textColor="#000000"
+            android:textSize="@dimen/scaleable26"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivProduct"
+            app:layout_constraintTop_toBottomOf="@id/tvNameProduct"
+            tools:text="$ 65.000" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

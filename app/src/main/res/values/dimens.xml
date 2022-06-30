@@ -16,4 +16,15 @@
     <dimen name="scaleable14">14sp</dimen>
     <dimen name="density1">1dp</dimen>
     <dimen name="density128">128dp</dimen>
+    <dimen name="density350">350dp</dimen>
+    <dimen name="scaleable36">36sp</dimen>
+    <dimen name="density26">26dp</dimen>
+    <dimen name="dimens40">40dp</dimen>
+    <dimen name="density48">48dp</dimen>
+    <dimen name="density32">32dp</dimen>
+    <dimen name="density0">0dp</dimen>
+    <dimen name="density12">12dp</dimen>
+    <dimen name="density35">35dp</dimen>
+    <dimen name="density40">40dp</dimen>
+    <dimen name="density20">20dp</dimen>
 </resources>

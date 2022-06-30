@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/density128"
+    android:orientation="vertical"
+    android:background="#FDD835">
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="@dimen/density100"
+        android:layout_height="@dimen/density100"
+        android:layout_marginTop="@dimen/density10"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_mercadolibre"/>
+</LinearLayout>

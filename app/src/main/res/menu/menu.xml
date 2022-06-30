@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/itHistorial"
+            android:icon="@drawable/ic_clock"
+            android:title="Historial"/>
+    </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/itClearHistorialSee"
+            android:icon="@drawable/ic_delete_historial"
+            android:title="Borrar historial" />
+    </group>
+
+</menu>

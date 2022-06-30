@@ -1,6 +1,7 @@
 package com.zalo.proyectmeli.presenter.home
 
 import android.content.res.Resources
+import android.util.Log
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.datasource.home.HomeDatasource
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -11,11 +12,15 @@ class HomePresenter(
     private val resources: Resources,
 ) : HomePresenterActions {
     private val compositeDisposable = CompositeDisposable()
+    private val TAG = "HomePresenter"
 
-    override fun initRecyclerCategories() {
+    override fun initComponent() {
         getCategoriesList()
         homeView.loadRecycler()
-        homeView.textSearch()
+        homeView.navigateToSearch()
+        homeView.showHistoryDb()
+        homeView.navigateToShowItem()
+        homeView.openMenu()
     }
 
     override fun getCategoriesList() {
@@ -26,15 +31,19 @@ class HomePresenter(
                     homeView.loadGone()
                 },
                 {
-                    homeView.showSnackBar(String.format(resources.getString(R.string.error_message),
-                        it.message))
+                    homeView.showSnackBar(resources.getString(R.string.error_message))
+                    Log.e(TAG, it.message.toString())
                 }
             )
         )
     }
 
     override fun showItemListDb() {
-        homeView.showListDb()
+        homeView.showHistoryDb()
+    }
+
+    override fun showHistorial() {
+        homeView.navigateToHistoryDb()
     }
 
     override fun showItemDb() {
@@ -43,7 +52,7 @@ class HomePresenter(
             homeDatasource.getRecentlyItem(id,
                 { homeView.showItemDb(it) },
                 {
-                    println(it.message.toString())
+                    Log.e(TAG, it.message.toString())
                 }
             )
         )
@@ -51,14 +60,57 @@ class HomePresenter(
 
     override fun loadRecentlySeen() {
         val id = homeDatasource.getIdRecentlySeenItem()
+        homeView.emptyRecently(id.isNullOrEmpty())
         compositeDisposable.add(
             homeDatasource.getRecentlyItem(id,
                 { homeView.loadRecentlySeen(it) },
                 {
-                    println(it.message.toString())
+                    Log.e(TAG, it.message.toString())
                 }
             )
         )
+    }
 
+    override fun deleteHistory() {
+        compositeDisposable.add(
+            homeDatasource.deleteHistory(
+                { Log.i(TAG, resources.getString(R.string.delete_history_complete))},
+                { Log.e(TAG, it.message.toString()) }
+            )
+        )
+    }
+
+    override fun deleteSearch() {
+        compositeDisposable.add(
+            homeDatasource.deleteSearch(
+                { Log.i(TAG, resources.getString(R.string.delete_search_complete)) },
+                { Log.e(TAG, it.message.toString()) }
+            )
+        )
+    }
+
+    override fun navigateToSearch() {
+        homeView.navigateToSearch()
+    }
+
+    override fun onNegativeButtonClicked() {
+        homeView.dialogDismiss()
+    }
+
+    override fun onPositiveButtonClicked() {
+        deleteHistory()
+        deleteSearch()
+        clearSharedValues()
+    }
+
+    override fun clearSharedValues() {
+        homeDatasource.setCountItem(0)
+        homeDatasource.setSearchPosition(0)
+        homeDatasource.setIdRecentlySeenItem("")
+        homeDatasource.setLinkRecentlySeen("")
+    }
+
+    override fun deleteDialog() {
+        homeView.showAlertCloseSession()
     }
 }

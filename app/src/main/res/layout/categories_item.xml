@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="@dimen/density8"
-    android:elevation="@dimen/density5"
+    android:id="@+id/cardListView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/density8"
-    android:id="@+id/cardListView">
+    android:elevation="@dimen/density5"
+    app:cardCornerRadius="@dimen/density8">
 
     <TextView
         android:id="@+id/btnCat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="categoría"
         android:layout_margin="@dimen/density8"
         android:textColor="@color/black"
-        app:drawableRightCompat="@drawable/ic_baseline_chevron_right_24" />
+        app:drawableRightCompat="@drawable/ic_baseline_chevron_right_24"
+        tools:text="categoría" />
 
 </androidx.cardview.widget.CardView>

@@ -2,59 +2,63 @@ package com.zalo.proyectmeli.presenter.item
 
 import android.content.Intent
 import android.content.res.Resources
+import android.util.Log
+import android.widget.TextView
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.datasource.item.ItemDatasource
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import com.zalo.proyectmeli.utils.*
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class ItemPresenter(
     private val itemView: ItemView,
     private val itemDatasource: ItemDatasource,
-    private val itemState: ItemState,
     private val resources: Resources,
 ) :
     ItemPresenterActions {
-
     private val compositeDisposable = CompositeDisposable()
-
+    private val TAG = "ItemPresenter"
     override fun initComponent(intent: Intent) {
-        setState(intent)
-        val item = getState()
-        itemView.retrieverExtras(item)
-        itemView.textSearch()
-        validateAndSaveItem(item)
+        val id = intent.getStringExtra(ITEM_ID) ?: ""
+        getItemById(id)
+        itemView.navigateToSearch()
+        itemView.onBack()
     }
 
-    override fun setState(intent: Intent) {
+    override fun getItemById(id: String) {
+        compositeDisposable.add(
+            itemDatasource.getItemById(id,
+                {
+                    itemView.retrieverExtras(it)
+                    itemDatasource.setIdRecentlySeenItem(it.id)
+                    itemDatasource.setPermalinkRecentlySeenItem(it.permaLink)
+                    validateAndSaveInDb(it)
+                },
+                {
+                    Log.e(TAG, it.message.toString())
+                }
+
+            )
+        )
+    }
+
+    override fun validateAndSaveInDb(item: ProductResponse) {
         val numberItem = dataBaseLimit(itemDatasource.getCountItems())
-        val id = intent.getStringExtra(ITEM_ID)
-        val title = intent.getStringExtra(ITEM_TITLE).toString()
-        val price = intent.getDoubleExtra(ITEM_PRICE, 0.0)
-        val soldQuantity = intent.getIntExtra(ITEM_SOLD_QUANTITY, 0)
-        val thumbnail = intent.getStringExtra(ITEM_THUMBNAIL).toString()
-        val permaLink = intent.getStringExtra(ITEM_PERMALINK).toString()
-        val condition = translateCondition(intent.getStringExtra(ITEM_CONDITION).toString())
-
-        itemState.numberItem.set(numberItem)
-        itemState.id.set(id)
-        itemState.title.set(title)
-        itemState.price.set(price)
-        itemState.condition.set(condition)
-        itemState.soldQuantity.set(soldQuantity)
-        itemState.thumbnail.set(thumbnail)
-        itemState.permaLink.set(permaLink)
-
-        itemDatasource.setIdRecentlySeenItem(id.toString())
-    }
-
-    override fun translateCondition(condition: String): String {
-        return if (condition == resources.getString(
-                R.string.newState)
-        ) {
-            resources.getString(R.string.newStateSpanish)
-        } else
-            resources.getString(R.string.usedState)
+        compositeDisposable.add(
+            itemDatasource.getById(item.id,
+                {
+                    if (it <= 0) {
+                        val itemDAO = item.copy(numberItem = numberItem)
+                        saveItem(itemDAO)
+                    } else {
+                        println(resources.getString(R.string.existing_id_in_database))
+                    }
+                },
+                {
+                    Log.e(TAG, it.message.toString())
+                }
+            )
+        )
     }
 
     override fun dataBaseLimit(num: Int): Int {
@@ -68,38 +72,39 @@ class ItemPresenter(
         return numberReturn
     }
 
-    override fun getState(): ProductResponse {
-        return ProductResponse(
-            itemState.numberItem.get() ?: 1,
-            itemState.id.get().orEmpty(),
-            itemState.title.get().orEmpty(),
-            itemState.thumbnail.get().orEmpty(),
-            itemState.condition.get().orEmpty(),
-            itemState.price.get() ?: 0.0,
-            itemState.soldQuantity.get() ?: 0,
-            itemState.permaLink.get().orEmpty()
+    override fun getItemDescription(id: String, view: TextView) {
+        compositeDisposable.add(
+            itemDatasource.getItemDescription(id,
+                { view.text = it.plainText },
+                { Log.e(TAG, it.message.toString()) }
+            )
         )
     }
 
     override fun saveItem(item: ProductResponse) {
         compositeDisposable.add(
             itemDatasource.dbInsertItem(item,
-                { println(resources.getString(R.string.saveSuccesfullyItem)) },
-                { println(it.message.toString()) })
+                { Log.i(TAG, resources.getString(R.string.saveSuccesfullyItem)) },
+                { Log.e(TAG, it.message.toString()) })
         )
     }
 
-    override fun validateAndSaveItem(item: ProductResponse) {
-        compositeDisposable.add(
-            itemDatasource.getById(item.id,
-                { if (it <= 0) saveItem(item) else println(resources.getString(R.string.existing_id_in_database)) },
-                { println(it.message.toString()) }
-            )
-        )
-    }
-
-    override fun navigateToMELI() {
-        val permaLink = itemState.permaLink.get().orEmpty()
+    override fun navigateToMeli() {
+        val permaLink = itemDatasource.getPermalinkRecentlySeenItem()
         itemView.navigateToMELI(permaLink)
+    }
+
+    override fun navigateToShared() {
+        val permaLink = itemDatasource.getPermalinkRecentlySeenItem()
+        itemView.sharedItem(permaLink)
+    }
+
+    override fun translateCondition(condition: String): String {
+        return if (condition == resources.getString(
+                R.string.newState)
+        ) {
+            resources.getString(R.string.newStateSpanish)
+        } else
+            resources.getString(R.string.usedState)
     }
 }

@@ -1,13 +1,13 @@
 package com.zalo.proyectmeli.network
 
-import com.zalo.proyectmeli.BuildConfig.URL_BASE
-import com.zalo.proyectmeli.network.models.Categories
-import com.zalo.proyectmeli.network.models.ProductDataResponse
+import com.zalo.proyectmeli.utils.URL_BASE
+import com.zalo.proyectmeli.utils.models.*
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface APIService {
@@ -21,6 +21,13 @@ interface APIService {
 
     @GET("search?")
     fun getItemsList(@Query("q") item: String): Single<ProductDataResponse>
+
+    @GET("/items/{item}/description")
+    fun getItemDescription(@Path("item") item: String): Single<DescriptionResponse>
+
+    @GET("/items/{item}")
+    fun getItemById(@Path("item") item: String): Single<ProductResponse>
+
 }
 
 object APIServiceImplements {
@@ -34,6 +41,14 @@ object APIServiceImplements {
 
     fun getItemsList(item: String): Single<ProductDataResponse> {
         return service.getItemsList(item)
+    }
+
+    fun getItemDescription(itemId: String): Single<DescriptionResponse> {
+        return service.getItemDescription(itemId)
+    }
+
+    fun getItemById(itemId: String): Single<ProductResponse> {
+        return service.getItemById(itemId)
     }
 
     private val service: APIService by lazy {

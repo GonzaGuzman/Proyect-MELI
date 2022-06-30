@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/density16"
+    android:paddingTop="@dimen/density12"
+    android:paddingEnd="@dimen/density16"
+    android:paddingBottom="@dimen/density12">
+
+    <TextView
+        android:id="@+id/tvSearched"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/density26"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/density12"
+        android:layout_marginEnd="@dimen/density12"
+        android:layout_weight="1"
+        android:drawablePadding="@dimen/density16"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/scaleable18"
+        app:drawableStartCompat="@drawable/ic_clock"
+        tools:text="product search" />
+
+    <ImageView
+        android:id="@+id/ivInsert"
+        android:layout_width="@dimen/density32"
+        android:layout_height="@dimen/density32"
+        android:layout_weight="0"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/density4"
+        android:rotation="270"
+        app:srcCompat="@drawable/ic_baseline_arrow_outward_24" />
+</LinearLayout>

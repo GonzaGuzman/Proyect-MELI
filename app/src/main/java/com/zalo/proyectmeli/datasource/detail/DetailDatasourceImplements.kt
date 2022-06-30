@@ -1,7 +1,7 @@
 package com.zalo.proyectmeli.datasource.detail
 
-import com.zalo.proyectmeli.network.models.ProductDataResponse
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.ProductDataResponse
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import com.zalo.proyectmeli.repository.detail.DetailRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
@@ -37,7 +37,7 @@ class DetailDatasourceImplements(private val repository: DetailRepository) :
     }
 
     override fun getItemsDb(
-        onSuccess: (responsive:  List<ProductResponse>) -> Unit,
+        onSuccess: (responsive: List<ProductResponse>) -> Unit,
         onError: (Throwable) -> Unit,
     ): Disposable {
         return repository.getItemsDb()

@@ -1,5 +1,7 @@
 package com.zalo.proyectmeli.utils
 
+const val URL_BASE = "https://api.mercadolibre.com/sites/MLA/"
+const val ITEM_DATABASE = "itemDB"
 const val CAT_ID = "catId"
 const val KEY_SEARCH = "keySearch"
 const val ITEM_ID = "itemId"

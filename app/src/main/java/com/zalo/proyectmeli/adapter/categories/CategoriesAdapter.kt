@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.activities.detail.DetailActivity
-import com.zalo.proyectmeli.network.models.Categories
+import com.zalo.proyectmeli.utils.models.Categories
 import com.zalo.proyectmeli.utils.CATEGORY_SHOW
 import com.zalo.proyectmeli.utils.CAT_ID
 import com.zalo.proyectmeli.utils.TYPE_SHOW

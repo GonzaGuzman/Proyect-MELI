@@ -1,15 +1,17 @@
 package com.zalo.proyectmeli.presenter.item
 
 import android.content.Intent
-import com.zalo.proyectmeli.network.models.ProductResponse
+import android.widget.TextView
+import com.zalo.proyectmeli.utils.models.ProductResponse
 
 interface ItemPresenterActions {
     fun initComponent(intent: Intent)
-    fun setState(intent: Intent)
-    fun getState(): ProductResponse
-    fun saveItem(item: ProductResponse)
-    fun navigateToMELI()
     fun translateCondition(condition: String): String
+    fun getItemById(id: String)
+    fun getItemDescription(id: String, view: TextView)
     fun dataBaseLimit(num: Int): Int
-    fun validateAndSaveItem(item: ProductResponse)
+    fun validateAndSaveInDb(item: ProductResponse)
+    fun saveItem(item: ProductResponse)
+    fun navigateToMeli()
+    fun navigateToShared()
 }

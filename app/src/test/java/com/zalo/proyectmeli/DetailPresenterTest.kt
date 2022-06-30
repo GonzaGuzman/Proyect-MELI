@@ -7,8 +7,8 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.zalo.proyectmeli.datasource.detail.DetailDatasource
-import com.zalo.proyectmeli.network.models.ProductDataResponse
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.ProductDataResponse
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import com.zalo.proyectmeli.presenter.detail.DetailPresenter
 import com.zalo.proyectmeli.presenter.detail.DetailView
 import com.zalo.proyectmeli.utils.CAT_ID

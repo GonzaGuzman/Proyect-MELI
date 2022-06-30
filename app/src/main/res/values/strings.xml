@@ -9,6 +9,22 @@
     <string name="searchInMercadolibre">Buscar en Mercado Libre</string>
     <string name="state_sold">Estado %1$s / Vendidos %2$s</string>
     <string name="saveSuccesfullyItem">save successfully item in database</string>
-    <string name="error_message">UPS ALGO SALIO MAL %1$s</string>
+    <string name="error_message">UPS Algo salio mal, comprueba tu conexion a internet y vuelve a intentarlo</string>
     <string name="existing_id_in_database">Existing ID in database</string>
+    <string name="productURL">URL del Producto</string>
+    <string name="productShare">Comparte este producto</string>
+    <string name="stock">Stock Disponible %1$s unidades</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+    <string name="no">Cancelar</string>
+    <string name="yes">Borrar mi historial</string>
+    <string name="delete_history">Historial borrado</string>
+    <string name="delete_history_search">Historial de busquedas borrado</string>
+    <string name="empty_database_message">Ahún no has visto nada</string>
+    <string name="clear_history_questions">¿Querés borrar tu historial?</string>
+    <string name="clear_history_warning">Si borrás tus publicaciones vistas y\nbúsquedas realizadas, dejarás de ver\nrecomendaciones personzalizadas\nhasta que acumules nueva actividad.</string>
+    <string name="inserted_successful">Inserted successful</string>
+    <string name="delete_history_complete">Delete History complete</string>
+    <string name="delete_search_complete">Delete Search Complete</string>
+    <string name="empty_recently_seen">Aún no viste publicaciones.\n ¡Empezá a descubrir todo lo que \n tenemos para vos!</string>
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FDD835"
+    android:padding="12dp">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/density16">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/density40"
+            app:cardCornerRadius="@dimen/density20"
+            app:cardElevation="@dimen/density0">
+
+            <TextView
+                android:id="@+id/tvSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="@dimen/density16"
+                android:maxLines="1"
+                android:paddingStart="@dimen/density16"
+                android:paddingEnd="@dimen/density16"
+                android:text="@string/searchInMercadolibre"
+                android:textColor="@color/grey_medium"
+                android:textSize="@dimen/scaleable18"
+                app:drawableStartCompat="@drawable/ic_search" />
+        </androidx.cardview.widget.CardView>
+    </androidx.appcompat.widget.Toolbar>
+</androidx.constraintlayout.widget.ConstraintLayout>

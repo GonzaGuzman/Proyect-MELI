@@ -1,7 +1,7 @@
 package com.zalo.proyectmeli.datasource.home
 
-import com.zalo.proyectmeli.network.models.Categories
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.Categories
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import io.reactivex.rxjava3.disposables.Disposable
 
 interface HomeDatasource {
@@ -11,10 +11,24 @@ interface HomeDatasource {
     ): Disposable
 
     fun getRecentlyItem(
-        id:String,
+        id: String,
         onSuccess: (responsive: ProductResponse) -> Unit,
         onError: (Throwable) -> Unit,
     ): Disposable
 
-    fun getIdRecentlySeenItem():String
+    fun deleteSearch(
+        onSuccess: () -> Unit,
+        onError: (Throwable) -> Unit,
+    ): Disposable
+
+    fun deleteHistory(
+        onSuccess: () -> Unit,
+        onError: (Throwable) -> Unit,
+    ): Disposable
+
+    fun getIdRecentlySeenItem(): String
+    fun setIdRecentlySeenItem(id: String)
+    fun setCountItem(count: Int)
+    fun setLinkRecentlySeen(id: String)
+    fun setSearchPosition(position: Int)
 }

@@ -7,7 +7,7 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.zalo.proyectmeli.datasource.item.ItemDatasource
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import com.zalo.proyectmeli.presenter.item.ItemPresenter
 import com.zalo.proyectmeli.presenter.item.ItemState
 import com.zalo.proyectmeli.presenter.item.ItemView
@@ -222,7 +222,7 @@ class ItemPresenterTest {
         whenever(item.id).thenReturn(ITEM_ID)
         whenever(resources.getString(R.string.saveSuccesfullyItem)).thenReturn(PRINT_RESPONSE)
         //WHEN
-        itemPresenter.validateAndSaveItem(item)
+        itemPresenter.validateAndSaveInDb(item)
         //THEN
         assertEquals(PRINT_RESPONSE, out.toString().trim())
     }
@@ -235,7 +235,7 @@ class ItemPresenterTest {
         whenever(item.id).thenReturn(ITEM_ID)
         whenever(resources.getString(R.string.existing_id_in_database)).thenReturn(PRINT_DUPLICATE)
         //WHEN
-        itemPresenter.validateAndSaveItem(item)
+        itemPresenter.validateAndSaveInDb(item)
         //THEN
         assertEquals(PRINT_DUPLICATE, out.toString().trim())
     }
@@ -247,7 +247,7 @@ class ItemPresenterTest {
         val item = Mockito.mock(ProductResponse::class.java)
         whenever(item.id).thenReturn(ITEM_ID)
             //WHEN
-        itemPresenter.validateAndSaveItem(item)
+        itemPresenter.validateAndSaveInDb(item)
         //THEN
         assertEquals(ITEM_FAIL, out.toString().trim())
     }

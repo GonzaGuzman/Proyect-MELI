@@ -1,7 +1,7 @@
 package com.zalo.proyectmeli.datasource.detail
 
-import com.zalo.proyectmeli.network.models.ProductDataResponse
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.ProductDataResponse
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import io.reactivex.rxjava3.disposables.Disposable
 
 interface DetailDatasource {

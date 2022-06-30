@@ -8,4 +8,5 @@ interface DetailPresenterActions {
     fun getProductListOfDb()
     fun initComponent(intent: Intent)
     fun loadFetched(intent: Intent)
+    fun navigateToSearch()
 }

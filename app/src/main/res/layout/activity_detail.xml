@@ -9,7 +9,17 @@
 
     <include
         android:id="@+id/toolbarSearchDetail"
-        layout="@layout/top_toolbar" />
+        layout="@layout/top_toolbar_search" />
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="@dimen/density50"
+        android:layout_height="@dimen/density26"
+        android:src="@drawable/ic_round_arrow_back_24"
+        app:layout_constraintBottom_toBottomOf="@id/toolbarSearchDetail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbarSearchDetail"
+        app:tint="@color/grey_medium" />
 
     <include
         android:id="@+id/layoutDetail"

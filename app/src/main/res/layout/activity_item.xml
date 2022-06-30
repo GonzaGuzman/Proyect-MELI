@@ -8,10 +8,20 @@
 
     <include
         android:id="@+id/toolbarSearchItem"
-        layout="@layout/top_toolbar"
+        layout="@layout/top_toolbar_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="@dimen/density50"
+        android:layout_height="@dimen/density26"
+        android:src="@drawable/ic_round_arrow_back_24"
+        app:layout_constraintBottom_toBottomOf="@id/toolbarSearchItem"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbarSearchItem"
+        app:tint="@color/grey_medium" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,61 +31,106 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarSearchItem">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvState"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/matchConstraint"
                 android:layout_marginStart="@dimen/density16"
                 android:layout_marginTop="@dimen/density16"
                 android:layout_marginEnd="@dimen/density16"
-                android:textColor="#B6B5B5" />
+                android:textColor="@color/grey_medium"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/state_sold" />
 
             <TextView
                 android:id="@+id/txtNameDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvState"
                 android:layout_marginTop="@dimen/density8"
                 android:padding="@dimen/density10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/scaleable16"
+                app:layout_constraintTop_toBottomOf="@id/tvState"
                 tools:text="phone" />
 
             <ImageView
-                android:id="@+id/imgProfileDetails"
-                android:layout_width="@dimen/density250"
-                android:layout_height="@dimen/density250"
-                android:layout_below="@+id/txtNameDetails"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/density8"
+                android:id="@+id/ivProfileDetails"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/density350"
+                android:layout_margin="@dimen/density6"
+                app:layout_constraintTop_toBottomOf="@id/txtNameDetails"
                 tools:src="@drawable/ic_baseline_search_24" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewShareIcon"
+                android:layout_width="@dimen/density48"
+                android:layout_height="@dimen/density48"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="@dimen/density16"
+                app:cardBackgroundColor="#F3F3F3"
+                app:cardCornerRadius="@dimen/density32"
+                app:cardElevation="@dimen/density0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivProfileDetails">
+
+                <ImageView
+                    android:id="@+id/shareIcon"
+                    android:layout_width="@dimen/density48"
+                    android:layout_height="@dimen/density48"
+                    android:layout_gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/density12"
+                    app:srcCompat="@drawable/ic_share" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/txtPriceDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imgProfileDetails"
-                android:layout_marginTop="@dimen/density8"
+                android:layout_marginStart="@dimen/density4"
+                android:layout_marginTop="@dimen/density10"
                 android:padding="@dimen/density10"
                 android:textColor="@color/black"
-                android:textSize="@dimen/scaleable26"
+                android:textSize="@dimen/scaleable36"
+                app:layout_constraintTop_toBottomOf="@id/cardViewShareIcon"
                 tools:text="$4.900" />
+
+            <TextView
+                android:id="@+id/tvStock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/density16"
+                android:layout_marginEnd="@dimen/density16"
+                android:textSize="@dimen/scaleable16"
+                app:layout_constraintTop_toBottomOf="@id/txtPriceDetails"
+                tools:text="@string/stock" />
 
             <Button
                 android:id="@+id/btnGoTo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtPriceDetails"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/density50"
+                android:layout_margin="@dimen/density6"
                 android:text="@string/searchInMELI"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                app:layout_constraintTop_toBottomOf="@id/tvStock" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/tvDescriptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/density16"
+                android:paddingBottom="@dimen/density26"
+                android:textColor="@color/black"
+                android:textSize="@dimen/scaleable16"
+                app:layout_constraintTop_toBottomOf="@id/btnGoTo" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

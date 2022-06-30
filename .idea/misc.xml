@@ -5,25 +5,42 @@
       <map>
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable-v24/ic_baseline_chevron_right_24.xml" value="0.309" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable-v24/radius_edittext.xml" value="0.309" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/border_radius.xml" value="0.2475" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/custom_progresbar.xml" value="0.198" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_baseline_chevron_right_24.xml" value="0.346" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_baseline_cloud_off_24.xml" value="0.309" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.309" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_mercadolibre.xml" value="0.346" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_outline_local_shipping_24.xml" value="0.1865" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_round_arrow_back_24.xml" value="0.198" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_search.xml" value="0.198" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_share.xml" value="0.198" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/drawable/ic_spinner.xml" value="0.1865" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/Item_categories.xml" value="0.25" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/activity_detail.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/activity_item.xml" value="0.25" />
-        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/activity_item.xml" value="0.264" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/activity_main.xml" value="0.14948453608247422" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/activity_search.xml" value="0.264" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/activity_splash.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/card_recycler.xml" value="0.5" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/card_recycler.xml" value="0.2891566265060241" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/categories.xml" value="0.35190217391304346" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/categories_item.xml" value="0.2558876811594203" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/categories_list_view.xml" value="0.35190217391304346" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/item_result.xml" value="0.35190217391304346" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/menu.xml" value="0.2477355072463768" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/nav_header.xml" value="0.2076923076923077" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/picture_item.xml" value="0.25" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/recently_seen.xml" value="0.365625" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/recycler.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/result_item.xml" value="0.33" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/search_item.xml" value="0.253125" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/splash.xml" value="0.11944444444444445" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/top_toolbar.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/top_toolbar_search.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/top_toolbar_search_view.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/top_toolbar_searchview.xml" value="0.253125" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/layout/top_toolbar_tv.xml" value="0.253125" />
+        <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/menu/menu.xml" value="0.264" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.309" />
         <entry key="..\:/Users/Gonza/AndroidStudioProjects/ProyectMELI/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.309" />
       </map>

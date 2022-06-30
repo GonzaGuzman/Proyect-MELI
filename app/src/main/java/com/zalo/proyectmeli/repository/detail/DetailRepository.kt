@@ -1,12 +1,10 @@
 package com.zalo.proyectmeli.repository.detail
 
-
 import com.zalo.proyectmeli.database.ItemDatabase
 import com.zalo.proyectmeli.network.APIServiceImplements
-import com.zalo.proyectmeli.network.models.ProductDataResponse
-import com.zalo.proyectmeli.network.models.ProductResponse
+import com.zalo.proyectmeli.utils.models.ProductDataResponse
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import io.reactivex.rxjava3.core.Single
-
 
 class DetailRepository(
     private val apiService: APIServiceImplements,
