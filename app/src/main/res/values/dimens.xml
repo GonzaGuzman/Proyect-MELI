@@ -27,4 +27,5 @@
     <dimen name="density35">35dp</dimen>
     <dimen name="density40">40dp</dimen>
     <dimen name="density20">20dp</dimen>
+    <dimen name="scaleable22">22sp</dimen>
 </resources>

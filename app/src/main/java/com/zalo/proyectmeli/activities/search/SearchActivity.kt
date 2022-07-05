@@ -26,15 +26,15 @@ class SearchActivity : AppCompatActivity(), SearchView {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchAdapter
+    private lateinit var searchPresenter: SearchPresenter
     private val dataBase = AppController.database
     private val searchRepository = SearchRepository(dataBase)
     private val searchDataSourceImplements = SearchDataSourceImplements(searchRepository)
-    private lateinit var searchPresenter: SearchPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         searchPresenter = SearchPresenter(this, searchDataSourceImplements, resources)
         searchPresenter.initComponent()
     }
@@ -46,29 +46,22 @@ class SearchActivity : AppCompatActivity(), SearchView {
         recyclerView.adapter = adapter
     }
 
-    override fun loadAdapter(searchList: List<SearchHistory>) {
-        adapter.appendList(searchList)
-    }
+    override fun loadAdapter(searchList: List<SearchHistory>) = adapter.appendList(searchList)
 
     override fun loadGone() {
         binding.recyclerSearchView.progressBar.visibility = View.GONE
     }
 
-    override fun navigateToDetail() {
-        val intent = Intent(this, DetailActivity::class.java)
-        with(binding) {
-            toolbarSearchView.tvSearchView.setOnClickListener {
-                if (!toolbarSearchView.tvSearchView.text.isNullOrEmpty()) {
-                    val searchText = toolbarSearchView.tvSearchView.text.toString()
-                    searchPresenter.insertNewSearch(searchText)
-                    intent.putExtra(KEY_SEARCH, searchText)
-                    intent.putExtra(TYPE_SHOW, SEARCH_SHOW)
-                    startActivity(intent)
-                    toolbarSearchView.tvSearchView.text?.clear()
-                }
-            }
+    override fun navigateToDetail() =
+        binding.toolbarSearchView.tvSearchView.setOnClickListener {
+            searchPresenter.startSearch(binding.toolbarSearchView.tvSearchView.text.toString())
         }
-    }
+
+    override fun startDetail(searchText: String) =
+        startActivity(Intent(this, DetailActivity::class.java).apply {
+            putExtra(KEY_SEARCH, searchText)
+            putExtra(TYPE_SHOW, SEARCH_SHOW)
+        })
 
     override fun loadArrayAdapter(searched: ArrayList<String>) {
         val arrayAdapter = ArrayAdapter(this,
@@ -76,15 +69,13 @@ class SearchActivity : AppCompatActivity(), SearchView {
         binding.toolbarSearchView.tvSearchView.setAdapter(arrayAdapter)
     }
 
-    override fun showSnackBar(message: String) {
+    override fun showSnackBar(message: String) =
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
             .setBackgroundTint(getColor(com.zalo.proyectmeli.R.color.grey_medium))
             .show()
-    }
 
-    override fun backToPressed() {
-        binding.toolbarSearchView.buttonBack.setOnClickListener {
-            onBackPressed()
-        }
-    }
+    override fun onBack() =
+        binding.toolbarSearchView.buttonBack.setOnClickListener { searchPresenter.back() }
+
+    override fun back() = onBackPressed()
 }

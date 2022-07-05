@@ -67,8 +67,7 @@ class HomePresenterTest {
             homeView.onCategoryFetched(listOfCategories))
         verify(homeView).loadGone()
         verify(homeView).loadRecycler()
-        verify(homeView).textSearch()
-    }
+      }
 
     @Test
     fun `initRecyclerCategories when getCategories is unsuccessfully`() {
@@ -80,8 +79,7 @@ class HomePresenterTest {
         //THEN
         verify(homeView).showSnackBar(String.format(THIS_FAILED, FAIL))
         verify(homeView).loadRecycler()
-        verify(homeView).textSearch()
-    }
+      }
 
     @Test
     fun `getCategoriesLis successfully`() {
@@ -114,7 +112,7 @@ class HomePresenterTest {
         //WHEN
         homePresenter.showItemListDb()
         //THEN
-        verify(homeView).showHistoryDb()
+        verify(homeView).navigateToHistoryDb()
     }
 
     @Test

@@ -9,4 +9,7 @@ interface DetailPresenterActions {
     fun initComponent(intent: Intent)
     fun loadFetched(intent: Intent)
     fun navigateToSearch()
+    fun back()
+    fun internetFail()
+    fun refreshButton(intent: Intent)
 }

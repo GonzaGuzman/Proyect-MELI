@@ -7,4 +7,6 @@ interface SearchPresenterActions {
     fun getAllSearch()
     fun getArraySearch(searchHistory: List<SearchHistory>)
     fun insertNewSearch(search: String)
+    fun back()
+    fun startSearch(search: String)
 }

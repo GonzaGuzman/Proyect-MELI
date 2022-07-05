@@ -34,26 +34,6 @@ class ItemDatasourceImplements(private val repository: ItemRepository) : ItemDat
                 { onError(it) })
     }
 
-    override fun setCountItems(itemNumber: Int) {
-        repository.setCountItems(itemNumber)
-    }
-
-    override fun getCountItems(): Int {
-        return repository.getCountItems()
-    }
-
-    override fun setIdRecentlySeenItem(id: String) {
-        repository.setIdRecentlySeenItems(id)
-    }
-
-    override fun setPermalinkRecentlySeenItem(permalink: String) {
-        repository.setPermalinkRecentlySeenItems(permalink)
-    }
-
-    override fun getPermalinkRecentlySeenItem(): String {
-        return repository.getPermalinkRecentlySeenItems()
-    }
-
     override fun getItemDescription(
         id: String,
         onSuccess: (response: DescriptionResponse) -> Unit,
@@ -81,4 +61,14 @@ class ItemDatasourceImplements(private val repository: ItemRepository) : ItemDat
                 { onError(it) }
             )
     }
+
+    override fun setCountItems(itemNumber: Int) = repository.setCountItems(itemNumber)
+
+    override fun getCountItems(): Int = repository.getCountItems()
+
+    override fun setIdRecentlySeenItem(id: String) = repository.setIdRecentlySeenItems(id)
+
+    override fun setPermalinkRecentlySeenItem(permalink: String) = repository.setPermalinkRecentlySeenItems(permalink)
+
+    override fun getPermalinkRecentlySeenItem(): String = repository.getPermalinkRecentlySeenItems()
 }

@@ -2,7 +2,6 @@ package com.zalo.proyectmeli.presenter.detail
 
 import android.content.Intent
 import android.content.res.Resources
-import android.util.Log
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.datasource.detail.DetailDatasource
 import com.zalo.proyectmeli.utils.models.ProductDataResponse
@@ -10,13 +9,13 @@ import com.zalo.proyectmeli.utils.CAT_ID
 import com.zalo.proyectmeli.utils.KEY_SEARCH
 import com.zalo.proyectmeli.utils.TYPE_SHOW
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+
 class DetailPresenter(
     private val detailView: DetailView,
     private val detailDatasource: DetailDatasource,
     private val resources: Resources,
 ) : DetailPresenterActions {
     private val compositeDisposable = CompositeDisposable()
-    private val TAG = "DetailPresenter"
 
     override fun initComponent(intent: Intent) {
         loadFetched(intent)
@@ -25,7 +24,7 @@ class DetailPresenter(
         detailView.onBack()
     }
 
-    override fun loadFetched(intent: Intent) {
+    override fun loadFetched(intent: Intent) =
         when (intent.getIntExtra(TYPE_SHOW, 0)) {
             1 -> {
                 val categoryID = intent.getStringExtra(CAT_ID).toString()
@@ -39,7 +38,6 @@ class DetailPresenter(
                 getProductListOfDb()
             }
         }
-    }
 
     override fun getProductList(search: String) {
         compositeDisposable.add(
@@ -49,8 +47,8 @@ class DetailPresenter(
                     detailView.loadGone()
                 },
                 {
-                    detailView.showSnackBar(resources.getString(R.string.error_message))
-                    Log.e(TAG,it.message.toString())
+                    if (!detailView.internetConnection()) internetFail() else detailView.showSnackBar(
+                        resources.getString(R.string.simple_error_message))
                 }
             )
         )
@@ -64,8 +62,8 @@ class DetailPresenter(
                     detailView.loadGone()
                 },
                 {
-                    detailView.showSnackBar(resources.getString(R.string.error_message))
-                    Log.e(TAG,it.message.toString())
+                    if (!detailView.internetConnection()) internetFail() else detailView.showSnackBar(
+                        resources.getString(R.string.simple_error_message))
                 }
             )
         )
@@ -79,15 +77,18 @@ class DetailPresenter(
                     detailView.loadGone()
                 },
                 {
-                    detailView.showSnackBar(resources.getString(R.string.error_message))
-                    Log.e(TAG,it.message.toString())
+                    detailView.showSnackBar(resources.getString(R.string.simple_error_message))
                 }
             )
         )
     }
 
-    override fun navigateToSearch() {
-        detailView.navigateToSearch()
+    override fun navigateToSearch() = detailView.startSearch()
+    override fun back() = detailView.back()
+    override fun internetFail() = detailView.internetFailViewEnabled()
+    override fun refreshButton(intent: Intent) {
+        detailView.internetFailViewDisabled()
+        initComponent(intent)
     }
 }
 

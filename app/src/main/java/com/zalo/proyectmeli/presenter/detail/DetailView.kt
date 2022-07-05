@@ -9,4 +9,9 @@ interface DetailView {
     fun loadGone()
     fun navigateToSearch()
     fun onBack()
-}
+    fun startSearch()
+    fun back()
+    fun internetConnection(): Boolean
+    fun internetFailViewDisabled()
+    fun internetFailViewEnabled()
+  }

@@ -9,9 +9,11 @@ interface HomePresenterActions {
     fun navigateToSearch()
     fun onNegativeButtonClicked()
     fun onPositiveButtonClicked()
-    fun deleteHistory()
     fun clearSharedValues()
-    fun deleteSearch()
     fun deleteDialog()
     fun showHistorial()
+    fun openMenu()
+    fun activateViews(validate: Boolean)
+    fun internetFail()
+    fun refreshButton()
 }

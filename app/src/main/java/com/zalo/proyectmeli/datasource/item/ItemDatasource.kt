@@ -17,13 +17,6 @@ interface ItemDatasource {
         onError: (Throwable) -> Unit,
     ): Disposable
 
-
-    fun setCountItems(itemNumber: Int)
-    fun getCountItems(): Int
-    fun setIdRecentlySeenItem(id: String)
-    fun setPermalinkRecentlySeenItem(permalink: String)
-    fun getPermalinkRecentlySeenItem(): String
-
     fun getItemDescription(
         id: String,
         onSuccess: (response: DescriptionResponse) -> Unit,
@@ -35,4 +28,10 @@ interface ItemDatasource {
         onSuccess: (response: ProductResponse) -> Unit,
         onError: (Throwable) -> Unit,
     ): Disposable
+
+    fun setCountItems(itemNumber: Int)
+    fun getCountItems(): Int
+    fun setIdRecentlySeenItem(id: String)
+    fun setPermalinkRecentlySeenItem(permalink: String)
+    fun getPermalinkRecentlySeenItem(): String
 }

@@ -51,15 +51,15 @@ class DetailPresenterTest {
         whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(1)
         getCategoryDetailSuccessfully()
         val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
-        val listProducts = Mockito.mock(ProductDataResponse::class.java)
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
         assertEquals(detailView.onProductFetched(productDataResponse),
-            detailView.onProductFetched(listProducts))
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
         verify(detailView).loadGone()
         verify(detailView).loadRecycler()
-        verify(detailView).textSearch()
+        verify(detailView).navigateToSearch()
+        verify(detailView).onBack()
     }
 
     @Test
@@ -69,15 +69,15 @@ class DetailPresenterTest {
         whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(2)
         getItemListSuccessfully()
         val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
-        val listProducts = Mockito.mock(ProductDataResponse::class.java)
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
         assertEquals(detailView.onProductFetched(productDataResponse),
-            detailView.onProductFetched(listProducts))
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
         verify(detailView).loadGone()
         verify(detailView).loadRecycler()
-        verify(detailView).textSearch()
+        verify(detailView).navigateToSearch()
+        verify(detailView).onBack()
     }
 
     @Test
@@ -85,16 +85,16 @@ class DetailPresenterTest {
         //GIVEN
         val intent = Mockito.mock(Intent::class.java)
         getItemDbSuccessfully()
-        val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
         val listProducts = Mockito.mock(ProductDataResponse::class.java)
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
-        assertEquals(detailView.onProductFetched(productDataResponse),
-            detailView.onProductFetched(listProducts))
+        assertEquals(detailView.onProductFetched(listProducts),
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
         verify(detailView).loadGone()
         verify(detailView).loadRecycler()
-        verify(detailView).textSearch()
+        verify(detailView).navigateToSearch()
+        verify(detailView).onBack()
     }
 
     @Test
@@ -107,9 +107,10 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
         verify(detailView).loadRecycler()
-        verify(detailView).textSearch()
+        detailView.navigateToSearch()
+        detailView.onBack()
     }
 
     @Test
@@ -122,9 +123,10 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
         verify(detailView).loadRecycler()
-        verify(detailView).textSearch()
+        detailView.navigateToSearch()
+        detailView.onBack()
     }
 
     @Test
@@ -136,9 +138,10 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
         verify(detailView).loadRecycler()
-        verify(detailView).textSearch()
+        detailView.navigateToSearch()
+        detailView.onBack()
     }
 
     @Test
@@ -146,13 +149,13 @@ class DetailPresenterTest {
         //GIVEN
         getCategoryDetailSuccessfully()
         val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
-        val listProducts = Mockito.mock(ProductDataResponse::class.java)
         //WHEN
         detailPresenter.getProductList(CAT_ID)
         //THEM
         assertEquals(detailView.onProductFetched(productDataResponse),
-            detailView.onProductFetched(listProducts))
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
         verify(detailView).loadGone()
+
     }
 
     @Test
@@ -160,12 +163,11 @@ class DetailPresenterTest {
         //GIVEN
         getItemListSuccessfully()
         val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
-        val listProducts = Mockito.mock(ProductDataResponse::class.java)
         //WHEN
         detailPresenter.searchItems(KEY_SEARCH)
         //THEM
         assertEquals(detailView.onProductFetched(productDataResponse),
-            detailView.onProductFetched(listProducts))
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
         verify(detailView).loadGone()
     }
 
@@ -173,13 +175,12 @@ class DetailPresenterTest {
     fun `loadFetched when TYPE_SHOW equals 3 and getItemDb success`() {
         //GIVEN
         getItemDbSuccessfully()
-        val productListResponse = Mockito.mock(listOf<ProductResponse>()::class.java)
         val listProducts = Mockito.mock(listOf<ProductResponse>()::class.java)
         //WHEN
         detailPresenter.getProductListOfDb()
         //THEM
-        assertEquals(detailView.onProductFetched(ProductDataResponse(productListResponse)),
-            detailView.onProductFetched(ProductDataResponse(listProducts)))
+        assertEquals(detailView.onProductFetched(ProductDataResponse(listProducts)),
+            detailView.onProductFetched(ProductDataResponse(LIST_PRODUCT_RESPONSE)))
         verify(detailView).loadGone()
     }
 
@@ -191,7 +192,7 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.getProductList(CAT_ID)
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
     }
 
     @Test
@@ -202,7 +203,7 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.searchItems(KEY_SEARCH)
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
     }
 
     @Test
@@ -213,7 +214,7 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.getProductListOfDb()
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
     }
 
     @Test
@@ -221,12 +222,11 @@ class DetailPresenterTest {
         //GIVEN
         getCategoryDetailSuccessfully()
         val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
-        val listProducts = Mockito.mock(ProductDataResponse::class.java)
         //WHEN
         detailPresenter.getProductList(CAT_ID)
         //THEM
         assertEquals(detailView.onProductFetched(productDataResponse),
-            detailView.onProductFetched(listProducts))
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
         verify(detailView).loadGone()
     }
 
@@ -235,12 +235,11 @@ class DetailPresenterTest {
         //GIVEN
         getItemListSuccessfully()
         val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
-        val listProducts = Mockito.mock(ProductDataResponse::class.java)
         //WHEN
         detailPresenter.searchItems(KEY_SEARCH)
         //THEM
         assertEquals(detailView.onProductFetched(productDataResponse),
-            detailView.onProductFetched(listProducts))
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
         verify(detailView).loadGone()
     }
 
@@ -248,13 +247,12 @@ class DetailPresenterTest {
     fun `getItemDb success`() {
         //GIVEN
         getItemDbSuccessfully()
-        val productListResponse = Mockito.mock(listOf<ProductResponse>()::class.java)
         val listProducts = Mockito.mock(listOf<ProductResponse>()::class.java)
         //WHEN
         detailPresenter.getProductListOfDb()
         //THEM
-        assertEquals(detailView.onProductFetched(ProductDataResponse(productListResponse)),
-            detailView.onProductFetched(ProductDataResponse(listProducts)))
+        assertEquals(detailView.onProductFetched(ProductDataResponse(listProducts)),
+            detailView.onProductFetched(ProductDataResponse(LIST_PRODUCT_RESPONSE)))
         verify(detailView).loadGone()
     }
 
@@ -266,7 +264,7 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.getProductList(CAT_ID)
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
     }
 
 
@@ -278,7 +276,7 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.searchItems(KEY_SEARCH)
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
     }
 
     @Test
@@ -289,19 +287,26 @@ class DetailPresenterTest {
         //WHEN
         detailPresenter.getProductListOfDb()
         //THEM
-        verify(detailView).showSnackBar(String.format(THIS_FAILED, FAIL))
+        verify(detailView).showSnackBar(THIS_FAILED)
     }
 
+    @Test
+    fun `navigateToSearch pressed`(){
+        //GIVEN
+        //WHEN
+        detailPresenter.navigateToSearch()
+        //THEN
+        verify(detailView).navigateToSearch()
+    }
     private fun getCategoryDetailSuccessfully() {
         val success = argumentCaptor<(ProductDataResponse) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
-        val listProducts = Mockito.mock(ProductDataResponse::class.java)
         whenever(detailDataSource.getCategoriesDetail(
             any(),
             success.capture(),
             error.capture(),
         )).thenAnswer {
-            success.firstValue.invoke(listProducts)
+            success.firstValue.invoke(PRODUCT_DATA_RESPONSE)
             mockDisposable
         }
     }
@@ -324,13 +329,12 @@ class DetailPresenterTest {
     private fun getItemListSuccessfully() {
         val success = argumentCaptor<(ProductDataResponse) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
-        val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
         whenever(detailDataSource.getItemsList(
             any(),
             success.capture(),
             error.capture(),
         )).thenAnswer {
-            success.firstValue.invoke(productDataResponse)
+            success.firstValue.invoke(PRODUCT_DATA_RESPONSE)
             mockDisposable
         }
     }
@@ -353,12 +357,11 @@ class DetailPresenterTest {
     private fun getItemDbSuccessfully() {
         val success = argumentCaptor<(List<ProductResponse>) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
-        val listProductResponse = Mockito.mock(listOf<ProductResponse>()::class.java)
         whenever(detailDataSource.getItemsDb(
             success.capture(),
             error.capture(),
         )).thenAnswer {
-            success.firstValue.invoke(listProductResponse)
+            success.firstValue.invoke(LIST_PRODUCT_RESPONSE)
             mockDisposable
         }
     }
@@ -378,7 +381,16 @@ class DetailPresenterTest {
     }
 
     companion object {
-        const val THIS_FAILED = "UPS ALGO SALIO MAL %s"
+        const val THIS_FAILED = "UPS Algo salio mal, comprueba tu conexion a internet y vuelve a intentarlo"
         const val FAIL = "FALLA: no se obtuvo la lista"
+        private val ITEM_1 =
+            ProductResponse(1, "item1", "product1", "", "", 0.0, 0, "product1.com", 0)
+        private val ITEM_2 =
+            ProductResponse(2, "item2", "product2", "", "", 0.0, 0, "product2.com", 0)
+        private val ITEM_3 =
+            ProductResponse(3, "item3", "product3", "", "", 0.0, 0, "product3.com", 0)
+        private val PRODUCT_DATA_RESPONSE = ProductDataResponse(listOf(ITEM_1, ITEM_2, ITEM_3))
+        private val LIST_PRODUCT_RESPONSE = listOf(ITEM_1, ITEM_2, ITEM_3)
+
     }
 }

@@ -12,7 +12,4 @@ interface SearchDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertNewSearch(newSearch: SearchHistory): Completable
-
-    @Query("DELETE FROM searchHistory")
-    fun deleteSearchHistory(): Completable
 }

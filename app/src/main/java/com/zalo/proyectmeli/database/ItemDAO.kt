@@ -17,12 +17,6 @@ interface ItemDAO {
     @Query("SELECT COUNT(id) FROM recentlySearch WHERE id =:id")
     fun getById(id: String): Single<Int>
 
-    @Update
-    fun update(productResponse: ProductResponse): Completable
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(productResponse: ProductResponse): Completable
-
-    @Query("DELETE FROM recentlySearch")
-    fun deleteHistory(): Completable
 }

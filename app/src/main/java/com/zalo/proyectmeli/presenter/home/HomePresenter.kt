@@ -1,9 +1,9 @@
 package com.zalo.proyectmeli.presenter.home
 
 import android.content.res.Resources
-import android.util.Log
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.datasource.home.HomeDatasource
+import com.zalo.proyectmeli.utils.FormatNumber
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class HomePresenter(
@@ -12,13 +12,12 @@ class HomePresenter(
     private val resources: Resources,
 ) : HomePresenterActions {
     private val compositeDisposable = CompositeDisposable()
-    private val TAG = "HomePresenter"
 
     override fun initComponent() {
         getCategoriesList()
         homeView.loadRecycler()
         homeView.navigateToSearch()
-        homeView.showHistoryDb()
+        homeView.navigateToHistoryDb()
         homeView.navigateToShowItem()
         homeView.openMenu()
     }
@@ -31,19 +30,11 @@ class HomePresenter(
                     homeView.loadGone()
                 },
                 {
-                    homeView.showSnackBar(resources.getString(R.string.error_message))
-                    Log.e(TAG, it.message.toString())
+                    if (!homeView.internetConnection()) internetFail() else homeView.showSnackBar(
+                        resources.getString(R.string.simple_error_message))
                 }
             )
         )
-    }
-
-    override fun showItemListDb() {
-        homeView.showHistoryDb()
-    }
-
-    override fun showHistorial() {
-        homeView.navigateToHistoryDb()
     }
 
     override fun showItemDb() {
@@ -52,7 +43,7 @@ class HomePresenter(
             homeDatasource.getRecentlyItem(id,
                 { homeView.showItemDb(it) },
                 {
-                    Log.e(TAG, it.message.toString())
+                    homeView.showSnackBar(resources.getString(R.string.simple_error_message))
                 }
             )
         )
@@ -60,49 +51,45 @@ class HomePresenter(
 
     override fun loadRecentlySeen() {
         val id = homeDatasource.getIdRecentlySeenItem()
-        homeView.emptyRecently(id.isNullOrEmpty())
-        compositeDisposable.add(
-            homeDatasource.getRecentlyItem(id,
-                { homeView.loadRecentlySeen(it) },
-                {
-                    Log.e(TAG, it.message.toString())
-                }
+        activateViews(id.isEmpty())
+        if (id.isNotEmpty())
+            compositeDisposable.add(
+                homeDatasource.getRecentlyItem(id,
+                    {
+                        homeView.loadRecentlySeen(it.title,
+                            FormatNumber.formatNumber(it.price),
+                            it.thumbnail)
+                    },
+                    {
+                        homeView.showSnackBar(resources.getString(R.string.simple_error_message))
+                    }
+                )
             )
-        )
     }
 
-    override fun deleteHistory() {
-        compositeDisposable.add(
-            homeDatasource.deleteHistory(
-                { Log.i(TAG, resources.getString(R.string.delete_history_complete))},
-                { Log.e(TAG, it.message.toString()) }
-            )
-        )
-    }
-
-    override fun deleteSearch() {
-        compositeDisposable.add(
-            homeDatasource.deleteSearch(
-                { Log.i(TAG, resources.getString(R.string.delete_search_complete)) },
-                { Log.e(TAG, it.message.toString()) }
-            )
-        )
-    }
-
-    override fun navigateToSearch() {
-        homeView.navigateToSearch()
-    }
-
-    override fun onNegativeButtonClicked() {
-        homeView.dialogDismiss()
+    override fun activateViews(validate: Boolean) {
+        homeView.onOffEmptyRecently(validate)
+        homeView.onOffRecyclerView(!validate)
+        homeView.validateDatabaseEmptyData(validate)
     }
 
     override fun onPositiveButtonClicked() {
-        deleteHistory()
-        deleteSearch()
-        clearSharedValues()
+        compositeDisposable.add(
+            homeDatasource.clearHistory(
+                {
+                    clearSharedValues()
+                    homeView.refresh()
+                },
+                { homeView.showSnackBar(resources.getString(R.string.simple_error_message)) }
+            )
+        )
     }
 
+    override fun showItemListDb() = homeView.navigateToHistoryDb()
+    override fun showHistorial() = homeView.showHistory()
+    override fun openMenu() = homeView.open()
+    override fun navigateToSearch() = homeView.startSearch()
+    override fun onNegativeButtonClicked() = homeView.dialogDismiss()
     override fun clearSharedValues() {
         homeDatasource.setCountItem(0)
         homeDatasource.setSearchPosition(0)
@@ -110,7 +97,10 @@ class HomePresenter(
         homeDatasource.setLinkRecentlySeen("")
     }
 
-    override fun deleteDialog() {
-        homeView.showAlertCloseSession()
+    override fun deleteDialog() = homeView.showAlertCloseSession()
+    override fun internetFail() = homeView.internetFailViewEnabled()
+    override fun refreshButton() {
+        homeView.internetFailViewDisabled()
+        initComponent()
     }
 }

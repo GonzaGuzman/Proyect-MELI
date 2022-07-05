@@ -1,7 +1,6 @@
 package com.zalo.proyectmeli.presenter.searchPresenter
 
 import android.content.res.Resources
-import android.util.Log
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.datasource.search.SearchDatasource
 import com.zalo.proyectmeli.utils.models.SearchHistory
@@ -14,13 +13,12 @@ class SearchPresenter(
     private val resources: Resources,
 ) : SearchPresenterActions {
     private val compositeDisposable = CompositeDisposable()
-    private val TAG = "SearchPresenter"
 
     override fun initComponent() {
         searchView.loadRecycler()
         getAllSearch()
         searchView.navigateToDetail()
-        searchView.backToPressed()
+        searchView.onBack()
     }
 
     override fun getAllSearch() {
@@ -31,7 +29,7 @@ class SearchPresenter(
                     getArraySearch(it)
                     searchView.loadGone()
                 },
-                { Log.e(TAG, it.message.toString()) }
+                { searchView.showSnackBar(resources.getString(R.string.simple_error_message)) }
 
             )
         )
@@ -43,15 +41,22 @@ class SearchPresenter(
         searchView.loadArrayAdapter(listOfSearch)
     }
 
+    override fun startSearch(search: String) {
+        insertNewSearch(search)
+        searchView.startDetail(search)
+    }
+
     override fun insertNewSearch(search: String) {
         val position = searchDatasource.getPosition()
         val searchAux = SearchHistory(search, position)
         searchDatasource.setPosition(position + 1)
         compositeDisposable.add(
             searchDatasource.insertNewSearch(searchAux,
-                { Log.i(TAG,resources.getString(R.string.inserted_successful)) },
-                { Log.e(TAG, it.message.toString()) }
+                { },
+                { searchView.showSnackBar(resources.getString(R.string.simple_error_message)) }
             )
         )
     }
+
+    override fun back() = searchView.back()
 }

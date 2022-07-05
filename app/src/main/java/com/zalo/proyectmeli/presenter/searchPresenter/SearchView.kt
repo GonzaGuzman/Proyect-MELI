@@ -9,5 +9,7 @@ interface SearchView {
     fun loadAdapter(searchList: List<SearchHistory>)
     fun navigateToDetail()
     fun loadArrayAdapter(searched: ArrayList<String>)
-    fun backToPressed()
+    fun onBack()
+    fun back()
+    fun startDetail(searchText: String)
 }

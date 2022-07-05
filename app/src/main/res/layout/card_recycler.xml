@@ -10,6 +10,34 @@
     app:shapeAppearanceOverlay="@drawable/radius_edittext">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/internetFail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/meli_internet_fail" />
+
+        <TextView
+            android:id="@+id/refreshButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retry"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/scaleable22"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.7" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

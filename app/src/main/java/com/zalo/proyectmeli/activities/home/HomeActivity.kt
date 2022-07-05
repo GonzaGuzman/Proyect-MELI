@@ -32,15 +32,16 @@ import com.zalo.proyectmeli.utils.models.ProductResponse
 class HomeActivity : AppCompatActivity(), HomeView,
     NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
-    private val dialog: AlertDialog? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoriesAdapter
+    private lateinit var homePresenter: HomePresenter
+    private val dialog: AlertDialog? = null
     private val apiService = APIServiceImplements
     private val dataBase = AppController.database
     private val homeRepository = HomeRepository(apiService, dataBase)
     private val homeDataSourceImplements = HomeDatasourceImplements(homeRepository)
-    private lateinit var homePresenter: HomePresenter
     private var databaseIsEmpty = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -57,22 +58,26 @@ class HomeActivity : AppCompatActivity(), HomeView,
         recyclerView.adapter = adapter
     }
 
-    override fun onCategoryFetched(categoriesList: List<Categories>) {
+    override fun onCategoryFetched(categoriesList: List<Categories>) =
         adapter.appendList(categoriesList)
+
+
+    override fun onOffEmptyRecently(validate: Boolean) {
+        binding.itemRecentlySeen.tvEmptyHistorial.isVisible = validate
     }
 
-    override fun emptyRecently(validate: Boolean) {
-        binding.itemRecentlySeen.tvEmptyHistorial.isVisible = validate
-        binding.itemRecentlySeen.viewRecently.isVisible = !validate
+    override fun onOffRecyclerView(validate: Boolean) {
+        binding.itemRecentlySeen.viewRecently.isVisible = validate
+    }
+
+    override fun validateDatabaseEmptyData(validate: Boolean) {
         databaseIsEmpty = validate
     }
 
-    override fun loadRecentlySeen(item: ProductResponse) {
-        binding.itemRecentlySeen.cardItemsRecently.tvNameProduct.text = item.title
-        binding.itemRecentlySeen.cardItemsRecently.tvPrice.text =
-            FormatNumber.formatNumber(item.price)
-        ShowImage.showImageO(item.thumbnail,
-            binding.itemRecentlySeen.cardItemsRecently.ivProduct)
+    override fun loadRecentlySeen(title: String, price: String, thumbnail: String) {
+        binding.itemRecentlySeen.cardItemsRecently.tvNameProduct.text = title
+        binding.itemRecentlySeen.cardItemsRecently.tvPrice.text = price
+        ShowImage.showImageO(thumbnail, binding.itemRecentlySeen.cardItemsRecently.ivProduct)
     }
 
     override fun loadGone() {
@@ -84,40 +89,37 @@ class HomeActivity : AppCompatActivity(), HomeView,
         homePresenter.loadRecentlySeen()
     }
 
-    override fun showHistoryDb() {
+    override fun navigateToHistoryDb() =
         binding.itemRecentlySeen.bottomNavigationTo.setOnClickListener {
-            navigateToHistoryDb()
+            homePresenter.showHistorial()
         }
-    }
 
-    override fun navigateToHistoryDb() {
-        val intent = Intent(this, DetailActivity::class.java)
-        intent.putExtra(TYPE_SHOW, DATA_BASE_SHOW)
-        startActivity(intent)
-    }
-
-    override fun showItemDb(item: ProductResponse) {
-        val intent = Intent(this, ItemActivity::class.java)
-        intent.putExtra(ITEM_ID, item.id)
-        startActivity(intent)
-    }
-
-    override fun navigateToShowItem() {
+    override fun navigateToShowItem() =
         binding.itemRecentlySeen.cardItemsRecently.cardItems.setOnClickListener {
             homePresenter.showItemDb()
         }
+
+    override fun navigateToSearch() = binding.toolbarSearchHome.tvSearch.setOnClickListener {
+        homePresenter.navigateToSearch()
     }
 
-    override fun navigateToSearch() {
-        binding.toolbarSearchHome.tvSearch.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
-        }
-    }
+
+    override fun showHistory() =
+        startActivity(Intent(this, DetailActivity::class.java).apply {
+            putExtra(TYPE_SHOW, DATA_BASE_SHOW)
+        })
+
+    override fun showItemDb(item: ProductResponse) =
+        startActivity(Intent(this, ItemActivity::class.java).apply {
+            putExtra(ITEM_ID, item.id)
+        })
+
+    override fun startSearch() = startActivity(Intent(this, SearchActivity::class.java))
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.itHistorial -> homePresenter.showHistorial()
-            R.id.itClearHistorialSee -> if (!databaseIsEmpty) homePresenter.deleteDialog() else showSnackBar(
+            R.id.itClearHistorial -> if (!databaseIsEmpty) homePresenter.deleteDialog() else showSnackBar(
                 getString(R.string.empty_database_message))
         }
         return true
@@ -134,31 +136,43 @@ class HomeActivity : AppCompatActivity(), HomeView,
             }
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 homePresenter.onPositiveButtonClicked()
-                this.startActivity(Intent(this, HomeActivity::class.java))
             }.show()
     }
 
-    override fun showSnackBar(message: String) {
+    override fun refresh() = startActivity(Intent(this, HomeActivity::class.java))
+
+    override fun showSnackBar(message: String) =
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
             .setBackgroundTint(getColor(R.color.grey_medium))
             .show()
-    }
 
     override fun dialogDismiss() {
         dialog?.dismiss()
     }
 
-    override fun openMenu() {
-        binding.ivMenuUp.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
+    override fun internetConnection(): Boolean = InternetAvailable.isConnected(this)
+
+    override fun internetFailViewDisabled() {
+        binding.layoutCategories.internetFail.visibility = View.GONE
+        binding.layoutCategories.constraintRecycler.visibility = View.VISIBLE
+    }
+
+    override fun internetFailViewEnabled() {
+        binding.layoutCategories.internetFail.visibility = View.VISIBLE
+        binding.layoutCategories.constraintRecycler.visibility = View.GONE
+        binding.layoutCategories.refreshButton.setOnClickListener {
+            homePresenter.refreshButton()
         }
     }
 
-    override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
+    override fun openMenu() = binding.ivMenuUp.setOnClickListener {
+        homePresenter.openMenu()
     }
+
+    override fun open() = binding.drawerLayout.openDrawer(GravityCompat.START)
+
+    override fun onBackPressed() =
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) binding.drawerLayout.closeDrawer(
+            GravityCompat.START)
+        else super.onBackPressed()
 }

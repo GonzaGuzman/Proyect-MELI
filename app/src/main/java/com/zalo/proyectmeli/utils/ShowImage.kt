@@ -12,7 +12,6 @@ object ShowImage {
         view.load(imgUri) {
             error(R.drawable.ic_baseline_cloud_off_24)
         }
-
     }
 
     fun showImageW(image: String, view: ImageView) {
@@ -21,6 +20,5 @@ object ShowImage {
         view.load(imgUri) {
             error(R.drawable.ic_baseline_cloud_off_24)
         }
-
     }
 }

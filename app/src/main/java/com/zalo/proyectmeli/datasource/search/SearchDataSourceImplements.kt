@@ -34,12 +34,7 @@ class SearchDataSourceImplements(private val repository: SearchRepository) : Sea
             )
     }
 
-    override fun getPosition(): Int {
-        return repository.getPosition()
-    }
+    override fun getPosition(): Int = repository.getPosition()
 
-    override fun setPosition(position: Int) {
-        repository.setPosition(position)
-    }
-
+    override fun setPosition(position: Int) = repository.setPosition(position)
 }

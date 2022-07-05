@@ -2,8 +2,6 @@ package com.zalo.proyectmeli.presenter.item
 
 import android.content.Intent
 import android.content.res.Resources
-import android.util.Log
-import android.widget.TextView
 import com.zalo.proyectmeli.R
 import com.zalo.proyectmeli.datasource.item.ItemDatasource
 import com.zalo.proyectmeli.utils.models.ProductResponse
@@ -17,11 +15,13 @@ class ItemPresenter(
 ) :
     ItemPresenterActions {
     private val compositeDisposable = CompositeDisposable()
-    private val TAG = "ItemPresenter"
     override fun initComponent(intent: Intent) {
         val id = intent.getStringExtra(ITEM_ID) ?: ""
         getItemById(id)
+        getItemDescription(id)
         itemView.navigateToSearch()
+        itemView.navigateToMeli()
+        itemView.navigateToShared()
         itemView.onBack()
     }
 
@@ -29,15 +29,21 @@ class ItemPresenter(
         compositeDisposable.add(
             itemDatasource.getItemById(id,
                 {
-                    itemView.retrieverExtras(it)
+                    val condition = translateCondition(it.condition)
+                    val title = it.title
+                    val thumbnail = it.thumbnail
+                    val state = resources.getString(R.string.state_sold, condition, it.soldQuantity)
+                    val price = FormatNumber.formatNumber(it.price)
+                    val stock = resources.getString(R.string.stock, it.stock)
+                    itemView.retrieveExtras(title, state, price, thumbnail, stock)
                     itemDatasource.setIdRecentlySeenItem(it.id)
                     itemDatasource.setPermalinkRecentlySeenItem(it.permaLink)
                     validateAndSaveInDb(it)
                 },
                 {
-                    Log.e(TAG, it.message.toString())
+                    if (!itemView.internetConnection()) internetFail() else itemView.showSnackBar(
+                        resources.getString(R.string.simple_error_message))
                 }
-
             )
         )
     }
@@ -50,13 +56,9 @@ class ItemPresenter(
                     if (it <= 0) {
                         val itemDAO = item.copy(numberItem = numberItem)
                         saveItem(itemDAO)
-                    } else {
-                        println(resources.getString(R.string.existing_id_in_database))
                     }
                 },
-                {
-                    Log.e(TAG, it.message.toString())
-                }
+                { }
             )
         )
     }
@@ -72,11 +74,11 @@ class ItemPresenter(
         return numberReturn
     }
 
-    override fun getItemDescription(id: String, view: TextView) {
+    override fun getItemDescription(id: String) {
         compositeDisposable.add(
             itemDatasource.getItemDescription(id,
-                { view.text = it.plainText },
-                { Log.e(TAG, it.message.toString()) }
+                { itemView.setDescription(it.plainText) },
+                { }
             )
         )
     }
@@ -84,27 +86,24 @@ class ItemPresenter(
     override fun saveItem(item: ProductResponse) {
         compositeDisposable.add(
             itemDatasource.dbInsertItem(item,
-                { Log.i(TAG, resources.getString(R.string.saveSuccesfullyItem)) },
-                { Log.e(TAG, it.message.toString()) })
+                { },
+                { })
         )
     }
 
-    override fun navigateToMeli() {
-        val permaLink = itemDatasource.getPermalinkRecentlySeenItem()
-        itemView.navigateToMELI(permaLink)
-    }
+    private fun permaLink() = itemDatasource.getPermalinkRecentlySeenItem()
+    override fun navigateToMeli() = itemView.startMELI(permaLink())
+    override fun navigateToShared() = itemView.sharedItem(permaLink())
+    override fun navigateToSearch() = itemView.startSearch()
+    override fun back() = itemView.back()
+    override fun internetFail() =
+        itemView.showSnackBarRed(resources.getString(R.string.it_seems_there_is_no_internet))
 
-    override fun navigateToShared() {
-        val permaLink = itemDatasource.getPermalinkRecentlySeenItem()
-        itemView.sharedItem(permaLink)
-    }
-
-    override fun translateCondition(condition: String): String {
-        return if (condition == resources.getString(
+    override fun refreshButton(intent: Intent) = initComponent(intent)
+    override fun translateCondition(condition: String): String =
+        if (condition == resources.getString(
                 R.string.newState)
-        ) {
-            resources.getString(R.string.newStateSpanish)
-        } else
-            resources.getString(R.string.usedState)
-    }
+        ) resources.getString(R.string.newStateSpanish) else resources.getString(R.string.usedState)
 }
+
+

@@ -16,19 +16,14 @@ interface HomeDatasource {
         onError: (Throwable) -> Unit,
     ): Disposable
 
-    fun deleteSearch(
-        onSuccess: () -> Unit,
+    fun clearHistory(
+        onSuccess: ()-> Unit,
         onError: (Throwable) -> Unit,
-    ): Disposable
-
-    fun deleteHistory(
-        onSuccess: () -> Unit,
-        onError: (Throwable) -> Unit,
-    ): Disposable
+    ):Disposable
 
     fun getIdRecentlySeenItem(): String
     fun setIdRecentlySeenItem(id: String)
     fun setCountItem(count: Int)
     fun setLinkRecentlySeen(id: String)
     fun setSearchPosition(position: Int)
-}
+   }

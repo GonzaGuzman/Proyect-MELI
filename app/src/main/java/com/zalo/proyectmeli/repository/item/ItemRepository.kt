@@ -12,17 +12,13 @@ class ItemRepository(
     private val dataBase: ItemDatabase,
     private val apiService: APIServiceImplements,
 ) {
-    fun insertItemDb(productResponse: ProductResponse): Completable {
-        return dataBase.itemDao().insert(productResponse)
-    }
+    fun insertItemDb(productResponse: ProductResponse): Completable = dataBase.itemDao().insert(productResponse)
 
     fun setCountItems(itemNumber: Int) {
         SharedPreferencesML().countItem = itemNumber
     }
 
-    fun getCountItems(): Int {
-        return SharedPreferencesML().countItem
-    }
+    fun getCountItems(): Int = SharedPreferencesML().countItem
 
     fun setIdRecentlySeenItems(id: String) {
         SharedPreferencesML().idRecentlySeen = id
@@ -32,19 +28,11 @@ class ItemRepository(
         SharedPreferencesML().permaLinkRecentlySeen = permalink
     }
 
-    fun getPermalinkRecentlySeenItems(): String {
-        return SharedPreferencesML().permaLinkRecentlySeen
-    }
+    fun getPermalinkRecentlySeenItems(): String = SharedPreferencesML().permaLinkRecentlySeen
 
-    fun getById(id: String): Single<Int> {
-        return dataBase.itemDao().getById(id)
-    }
+    fun getById(id: String): Single<Int> = dataBase.itemDao().getById(id)
 
-    fun getItemDescription(id: String): Single<DescriptionResponse> {
-        return apiService.getItemDescription(id)
-    }
+    fun getItemDescription(id: String): Single<DescriptionResponse> = apiService.getItemDescription(id)
 
-    fun getItemById(id: String): Single<ProductResponse> {
-        return apiService.getItemById(id)
-    }
+    fun getItemById(id: String): Single<ProductResponse> = apiService.getItemById(id)
 }

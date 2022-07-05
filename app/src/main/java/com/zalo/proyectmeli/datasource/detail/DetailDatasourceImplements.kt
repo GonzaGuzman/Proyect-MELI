@@ -48,6 +48,4 @@ class DetailDatasourceImplements(private val repository: DetailRepository) :
                 { onError(it) }
             )
     }
-
-
 }

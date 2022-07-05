@@ -31,25 +31,15 @@ interface APIService {
 }
 
 object APIServiceImplements {
-    fun getCategories(): Single<List<Categories>> {
-        return service.getCategories()
-    }
+    fun getCategories(): Single<List<Categories>> = service.getCategories()
 
-    fun getCategoriesDetail(categories: String): Single<ProductDataResponse> {
-        return service.getCategoriesDetails(categories)
-    }
+    fun getCategoriesDetail(categories: String): Single<ProductDataResponse> = service.getCategoriesDetails(categories)
 
-    fun getItemsList(item: String): Single<ProductDataResponse> {
-        return service.getItemsList(item)
-    }
+    fun getItemsList(item: String): Single<ProductDataResponse> = service.getItemsList(item)
 
-    fun getItemDescription(itemId: String): Single<DescriptionResponse> {
-        return service.getItemDescription(itemId)
-    }
+    fun getItemDescription(itemId: String): Single<DescriptionResponse> = service.getItemDescription(itemId)
 
-    fun getItemById(itemId: String): Single<ProductResponse> {
-        return service.getItemById(itemId)
-    }
+    fun getItemById(itemId: String): Single<ProductResponse> = service.getItemById(itemId)
 
     private val service: APIService by lazy {
         Retrofit

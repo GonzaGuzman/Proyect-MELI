@@ -25,25 +25,28 @@
         <activity
             android:name=".activities.splash.SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.detail.DetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
             android:exported="true" />
         <activity
             android:name=".activities.item.ItemActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
             android:exported="true" />
         <activity
             android:name=".activities.home.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
             android:exported="true" />
     </application>
 

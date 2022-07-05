@@ -10,15 +10,9 @@ class DetailRepository(
     private val apiService: APIServiceImplements,
     private val dataBase: ItemDatabase,
 ) {
-    fun getCategoriesDetails(categories: String): Single<ProductDataResponse> {
-        return apiService.getCategoriesDetail(categories)
-    }
+    fun getCategoriesDetails(categories: String): Single<ProductDataResponse> = apiService.getCategoriesDetail(categories)
 
-    fun getItemsList(item: String): Single<ProductDataResponse> {
-        return apiService.getItemsList(item)
-    }
+    fun getItemsList(item: String): Single<ProductDataResponse> = apiService.getItemsList(item)
 
-    fun getItemsDb(): Single<List<ProductResponse>> {
-        return dataBase.itemDao().getItems()
-    }
+    fun getItemsDb(): Single<List<ProductResponse>> = dataBase.itemDao().getItems()
 }
