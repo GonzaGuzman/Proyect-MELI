@@ -23,26 +23,24 @@ Pasos para la ejecución del proyecto.
 3. Abrir con el IDE Android Studio
 
 # Arquitectura usada
-* [MVP]
+* [MVP + Repository]
 
 # Descripción de la aplicación
 
 La aplicación funciona como un navegador de productos de MercadoLibre:
 
-Posee una barra de busqueda compartida en sus tres pantallas la cual sirve para buscar productos en base a palabras clave (query) y presentar las diferentes listas de resultados en la pantalla de detalles.
-
+Posee una barra de busqueda compartida en sus tres de sus 4 pantallas la cual dirige a la activity Search para buscar productos en base a palabras clave (query) y presentar las diferentes listas de resultados en la pantalla de detalles.
 
 La Pantalla pricipal ademas de la barra de busqueda, cuenta con una vista y detalles del ultimo producto visto (el cual esta guardado en base de datos local) que al presionarla dirige a la pantalla de detalles de Items con dicha informacion para ser expuesta al usuario en dicha pantalla.
 
-tambien presenta un listado de todas las categorias disponibles que al seleccionar una deriva la lista de resultados para ser presentados en la pantalla de detalles. 
-
+tambien presenta un listado de todas las categorias disponibles que al seleccionar una deriva la lista de resultados para ser presentados en la pantalla de detalles y un Drawer Menu con los items para ver el Historial y para eliminarlo. 
 
 La pantalla de detalles esta compuesta por la barra de busqueda y presenta las listas obtenidas en busqueda (obtenida de la barra de buscador), seleccion de categoria (obtenida al seleccionar cualquier categoria de la pantalla principal) 
 y lista de base de datos (obtenida al pulsar el botón "Ver historial de navegacion") de productos vistos. Donde al realizar una nueva busqueda esta se actualiza con los resultados o en caso de selleccionar algun producto 
 envia la informacion a la pantalla de detalles de items
 
 La pantalla de detalles de items presenta muestra los detalles de un producto. Los elementos de esta pantalla incluyen la condición del producto (Nuevo/Usado), las unidades vendidas (en algunos casos aproximada), el titulo del producto,
-una de imágen del producto, el precio del producto y un botón que permite abrir el producto en la web oficial de MercadoLibre (o en la app si esta instalada).
+una de imágen del producto, el precio del producto, stock y un detalle con las caracteristicas del producto. Ademas posee un botón que permite abrir el producto en la web oficial de MercadoLibre (o en la app si esta instalada) y otro para compartirlo por el medio deseado
 
 # Estilo visual
 
@@ -71,7 +69,7 @@ y la libreria Room que facilita la creacion de database local y el trabajo con o
 
 # Testeo
 
-* Fueron creadas pruebas unitarias para los 3 componentes lógicos principales de la aplicación (HomePresenter, DetailPresenter, ItemPresenter) con una cobertura del 100% en cada caso.
+* Fueron creadas pruebas unitarias para los 5 componentes lógicos principales de la aplicación (SplashPresenter, HomePresenter, DetailPresenter, ItemPresenter, SearchPresenter) con una cobertura del 100% en cada caso.
 
 Todas las pruebas fueron ejecutadas efectivamente sin ningún fallo en las APIs mencionadas anteriormente.
 
@@ -79,4 +77,7 @@ Todas las pruebas fueron ejecutadas efectivamente sin ningún fallo en las APIs 
 
 * Si ocurre un error que afecta la experiencia del usuario, este se vera reflejado en forma de snackBar en la pantalla.
 
-* Con respecto a los permisos de la aplicación, solo se requiere el permiso a Internet.
+* Si ocurre un error por falla de conexion a internet, en caso del recycler este se reemplaza con una imageView que describe el problema y un botón de "Reintentar" conexion,
+ en caso de ItemActivity se da aviso por medio de snackBar tambien con la opción de "Reintentar" conexion
+
+* Con respecto a los permisos de la aplicación, solo se requiere los permisos a INERNET Y ACCESS_NETWORK_STATE
