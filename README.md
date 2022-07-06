@@ -80,4 +80,4 @@ Todas las pruebas fueron ejecutadas efectivamente sin ningún fallo en las APIs 
 * Si ocurre un error por falla de conexion a internet, en caso del recycler este se reemplaza con una imageView que describe el problema y un botón de "Reintentar" conexion,
  en caso de ItemActivity se da aviso por medio de snackBar tambien con la opción de "Reintentar" conexion
 
-* Con respecto a los permisos de la aplicación, solo se requiere los permisos a INERNET Y ACCESS_NETWORK_STATE
+* Con respecto a los permisos de la aplicación, solo se requiere los permisos a INTERNET Y ACCESS_NETWORK_STATE
