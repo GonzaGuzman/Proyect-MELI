@@ -98,32 +98,66 @@ class DetailPresenterTest {
     }
 
     @Test
-    fun `initComponent call when loadFetched and getCategoryDetail fail`() {
+    fun `initComponent call when loadFetched and getCategoryDetail fail with out internet failure`() {
         //GIVEN
         val intent = Mockito.mock(Intent::class.java)
         whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(1)
         getCategoryDetailUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
         verify(detailView).loadRecycler()
         detailView.navigateToSearch()
         detailView.onBack()
     }
 
     @Test
-    fun `initComponent call when loadFetched and getItemList fail`() {
+    fun `initComponent call when loadFetched and getCategoryDetail fail with internet failure`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(1)
+        getCategoryDetailUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.initComponent(intent)
+        //THEM
+        verify(detailView).internetFailViewEnabled()
+        verify(detailView).loadRecycler()
+        detailView.navigateToSearch()
+        detailView.onBack()
+    }
+
+    @Test
+    fun `initComponent call when loadFetched and getItemList fail with out internet failure`() {
         //GIVEN
         val intent = Mockito.mock(Intent::class.java)
         whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(2)
         getItemListUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
+        verify(detailView).loadRecycler()
+        detailView.navigateToSearch()
+        detailView.onBack()
+    }
+
+    @Test
+    fun `initComponent call when loadFetched and getItemList fail with internet failure`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(2)
+        getItemListUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.initComponent(intent)
+        //THEM
+        verify(detailView).internetFailViewEnabled()
         verify(detailView).loadRecycler()
         detailView.navigateToSearch()
         detailView.onBack()
@@ -134,11 +168,11 @@ class DetailPresenterTest {
         //GIVEN
         val intent = Mockito.mock(Intent::class.java)
         getItmDbUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.initComponent(intent)
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
         verify(detailView).loadRecycler()
         detailView.navigateToSearch()
         detailView.onBack()
@@ -185,36 +219,61 @@ class DetailPresenterTest {
     }
 
     @Test
-    fun `loadFetched when TYPE_SHOW equals 1 and getProductList fail`() {
+    fun `loadFetched when TYPE_SHOW equals 1 and getProductList fail with out internet failure`() {
         //GIVEN
         getCategoryDetailUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.getProductList(CAT_ID)
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
     }
 
     @Test
-    fun `loadFetched when TYPE_SHOW equals 2 and getItemList fail`() {
+    fun `loadFetched when TYPE_SHOW equals 1 and getProductList fail with internet failure`() {
+        //GIVEN
+        getCategoryDetailUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.getProductList(CAT_ID)
+        //THEM
+        verify(detailView).internetFailViewEnabled()
+    }
+
+    @Test
+    fun `loadFetched when TYPE_SHOW equals 2 and getItemList fail with out internet failure`() {
         //GIVEN
         getItemListUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.searchItems(KEY_SEARCH)
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
     }
+
+    @Test
+    fun `loadFetched when TYPE_SHOW equals 2 and getItemList fail with internet failure`() {
+        //GIVEN
+        getItemListUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.searchItems(KEY_SEARCH)
+        //THEM
+        verify(detailView).internetFailViewEnabled()
+    }
+
 
     @Test
     fun `loadFetched when TYPE_SHOW equals 3 and getItemDb fail`() {
         //GIVEN
         getItmDbUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.getProductListOfDb()
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
     }
 
     @Test
@@ -257,47 +316,233 @@ class DetailPresenterTest {
     }
 
     @Test
-    fun `getProductList fail`() {
+    fun `getProductList fail with out internet failure`() {
         //GIVEN
         getCategoryDetailUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.getProductList(CAT_ID)
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
+    }
+
+    @Test
+    fun `getProductList fail with internet failure`() {
+        //GIVEN
+        getCategoryDetailUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.getProductList(CAT_ID)
+        //THEM
+        verify(detailView).internetFailViewEnabled()
     }
 
 
     @Test
-    fun `getItemList fail`() {
+    fun `getItemList fail with out internet failure`() {
         //GIVEN
         getItemListUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.searchItems(KEY_SEARCH)
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
     }
+
+    @Test
+    fun `getItemList fail with internet failure`() {
+        //GIVEN
+        getItemListUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.searchItems(KEY_SEARCH)
+        //THEM
+        verify(detailView).internetFailViewEnabled()
+    }
+
 
     @Test
     fun `getItemDb fail`() {
         //GIVEN
         getItmDbUnsuccessfully()
-        whenever(resources.getString(R.string.error_message)).thenReturn(THIS_FAILED)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
         //WHEN
         detailPresenter.getProductListOfDb()
         //THEM
-        verify(detailView).showSnackBar(THIS_FAILED)
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
     }
 
     @Test
-    fun `navigateToSearch pressed`(){
+    fun `navigateToSearch pressed`() {
         //GIVEN
         //WHEN
         detailPresenter.navigateToSearch()
         //THEN
-        verify(detailView).navigateToSearch()
+        verify(detailView).startSearch()
     }
+
+    @Test
+    fun `back pressed`() {
+        //GIVEN
+        //WHEN
+        detailPresenter.back()
+        //THEN
+        verify(detailView).back()
+    }
+
+    @Test
+    fun `internetFail is call`() {
+        //GIVEN
+        //WHEN
+        detailPresenter.internetFail()
+        //THEN
+        verify(detailView).internetFailViewEnabled()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getCategoryDetail success`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(1)
+        getCategoryDetailSuccessfully()
+        val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEN
+        verify(detailView).internetFailViewDisabled()
+        assertEquals(detailView.onProductFetched(productDataResponse),
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
+        verify(detailView).loadGone()
+        verify(detailView).loadRecycler()
+        verify(detailView).navigateToSearch()
+        verify(detailView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getItemList success`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(2)
+        getItemListSuccessfully()
+        val productDataResponse = Mockito.mock(ProductDataResponse::class.java)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEM
+        verify(detailView).internetFailViewDisabled()
+        assertEquals(detailView.onProductFetched(productDataResponse),
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
+        verify(detailView).loadGone()
+        verify(detailView).loadRecycler()
+        verify(detailView).navigateToSearch()
+        verify(detailView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getItemDb success`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        getItemDbSuccessfully()
+        val listProducts = Mockito.mock(ProductDataResponse::class.java)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEM
+        verify(detailView).internetFailViewDisabled()
+        assertEquals(detailView.onProductFetched(listProducts),
+            detailView.onProductFetched(PRODUCT_DATA_RESPONSE))
+        verify(detailView).loadGone()
+        verify(detailView).loadRecycler()
+        verify(detailView).navigateToSearch()
+        verify(detailView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getCategoryDetail fail with out internet failure`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(1)
+        getCategoryDetailUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEM
+        verify(detailView).internetFailViewDisabled()
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
+        verify(detailView).loadRecycler()
+        detailView.navigateToSearch()
+        detailView.onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getCategoryDetail fail with internet failure`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(1)
+        getCategoryDetailUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEM
+        verify(detailView).internetFailViewDisabled()
+        verify(detailView).internetFailViewEnabled()
+        verify(detailView).loadRecycler()
+        detailView.navigateToSearch()
+        detailView.onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getItemList fail with out internet failure`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(2)
+        getItemListUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEM
+        verify(detailView).internetFailViewDisabled()
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
+        verify(detailView).loadRecycler()
+        detailView.navigateToSearch()
+        detailView.onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getItemList fail with internet failure`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(intent.getIntExtra(TYPE_SHOW, 0)).thenReturn(2)
+        getItemListUnsuccessfully()
+        whenever(detailView.internetConnection()).thenReturn(false)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEM
+        verify(detailView).internetFailViewDisabled()
+        verify(detailView).internetFailViewEnabled()
+        verify(detailView).loadRecycler()
+        detailView.navigateToSearch()
+        detailView.onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent call when loadFetched and getItemDb fail`() {
+        //GIVEN
+        val intent = Mockito.mock(Intent::class.java)
+        getItmDbUnsuccessfully()
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(SIMPLE_FAILED)
+        //WHEN
+        detailPresenter.refreshButton(intent)
+        //THEM
+        verify(detailView).internetFailViewDisabled()
+        verify(detailView).showSnackBar(SIMPLE_FAILED)
+        verify(detailView).loadRecycler()
+        detailView.navigateToSearch()
+        detailView.onBack()
+    }
+
     private fun getCategoryDetailSuccessfully() {
         val success = argumentCaptor<(ProductDataResponse) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
@@ -315,7 +560,6 @@ class DetailPresenterTest {
         val success = argumentCaptor<(ProductDataResponse) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
         val responseThrowable = Mockito.mock(Throwable::class.java)
-        whenever(responseThrowable.message).thenReturn(FAIL)
         whenever(detailDataSource.getCategoriesDetail(
             any(),
             success.capture(),
@@ -343,7 +587,6 @@ class DetailPresenterTest {
         val success = argumentCaptor<(ProductDataResponse) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
         val responseThrowable = Mockito.mock(Throwable::class.java)
-        whenever(responseThrowable.message).thenReturn(FAIL)
         whenever(detailDataSource.getItemsList(
             any(),
             success.capture(),
@@ -370,7 +613,6 @@ class DetailPresenterTest {
         val success = argumentCaptor<(List<ProductResponse>) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
         val responseThrowable = Mockito.mock(Throwable::class.java)
-        whenever(responseThrowable.message).thenReturn(FAIL)
         whenever(detailDataSource.getItemsDb(
             success.capture(),
             error.capture(),
@@ -381,8 +623,7 @@ class DetailPresenterTest {
     }
 
     companion object {
-        const val THIS_FAILED = "UPS Algo salio mal, comprueba tu conexion a internet y vuelve a intentarlo"
-        const val FAIL = "FALLA: no se obtuvo la lista"
+        const val SIMPLE_FAILED = "Ups algo salio mal, vuelve a intentarlo"
         private val ITEM_1 =
             ProductResponse(1, "item1", "product1", "", "", 0.0, 0, "product1.com", 0)
         private val ITEM_2 =
@@ -391,6 +632,5 @@ class DetailPresenterTest {
             ProductResponse(3, "item3", "product3", "", "", 0.0, 0, "product3.com", 0)
         private val PRODUCT_DATA_RESPONSE = ProductDataResponse(listOf(ITEM_1, ITEM_2, ITEM_3))
         private val LIST_PRODUCT_RESPONSE = listOf(ITEM_1, ITEM_2, ITEM_3)
-
     }
 }

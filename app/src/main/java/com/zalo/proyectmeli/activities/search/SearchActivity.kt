@@ -61,7 +61,7 @@ class SearchActivity : AppCompatActivity(), SearchView {
         startActivity(Intent(this, DetailActivity::class.java).apply {
             putExtra(KEY_SEARCH, searchText)
             putExtra(TYPE_SHOW, SEARCH_SHOW)
-        })
+        }).also { finish() }
 
     override fun loadArrayAdapter(searched: ArrayList<String>) {
         val arrayAdapter = ArrayAdapter(this,

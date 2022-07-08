@@ -22,7 +22,6 @@ interface HomeView {
     fun refresh()
     fun open()
     fun onOffRecyclerView(validate: Boolean)
-    fun validateDatabaseEmptyData(validate: Boolean)
     fun internetConnection(): Boolean
     fun internetFailViewEnabled()
     fun internetFailViewDisabled()

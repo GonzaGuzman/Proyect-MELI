@@ -70,8 +70,8 @@ class HomePresenter(
     override fun activateViews(validate: Boolean) {
         homeView.onOffEmptyRecently(validate)
         homeView.onOffRecyclerView(!validate)
-        homeView.validateDatabaseEmptyData(validate)
     }
+
 
     override fun onPositiveButtonClicked() {
         compositeDisposable.add(

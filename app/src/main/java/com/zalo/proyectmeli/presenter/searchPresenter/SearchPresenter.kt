@@ -42,17 +42,18 @@ class SearchPresenter(
     }
 
     override fun startSearch(search: String) {
-        insertNewSearch(search)
-        searchView.startDetail(search)
+        if (search.isNotEmpty()) {
+            insertNewSearch(search)
+            searchView.startDetail(search)
+        }
     }
 
     override fun insertNewSearch(search: String) {
         val position = searchDatasource.getPosition()
         val searchAux = SearchHistory(search, position)
-        searchDatasource.setPosition(position + 1)
         compositeDisposable.add(
             searchDatasource.insertNewSearch(searchAux,
-                { },
+                { searchDatasource.setPosition(position + 1) },
                 { searchView.showSnackBar(resources.getString(R.string.simple_error_message)) }
             )
         )

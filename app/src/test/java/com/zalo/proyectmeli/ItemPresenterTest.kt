@@ -1,14 +1,26 @@
 package com.zalo.proyectmeli
 
+import android.content.Intent
 import android.content.res.Resources
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.zalo.proyectmeli.datasource.item.ItemDatasource
 import com.zalo.proyectmeli.presenter.item.ItemPresenter
 import com.zalo.proyectmeli.presenter.item.ItemView
+import com.zalo.proyectmeli.utils.FormatNumber
+import com.zalo.proyectmeli.utils.ITEM_ID
+import com.zalo.proyectmeli.utils.models.DescriptionResponse
+import com.zalo.proyectmeli.utils.models.ProductResponse
 import io.reactivex.rxjava3.disposables.Disposable
+import junit.framework.TestCase.assertEquals
+import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import java.io.ByteArrayOutputStream
 
 @RunWith(MockitoJUnitRunner::class)
 class ItemPresenterTest {
@@ -26,104 +38,215 @@ class ItemPresenterTest {
 
     private lateinit var itemPresenter: ItemPresenter
 
-    private val out = ByteArrayOutputStream()
-    private val originalOut = System.out}
-/*
-
     @Before
     fun setup() {
-        itemPresenter = ItemPresenter(itemView, itemDataSource, itemState, resources)
-
-        System.setOut(PrintStream(out))
-
-    }
-
-    @After
-    fun restoreInitialStreams() {
-        System.setOut(originalOut)
+        itemPresenter = ItemPresenter(itemView, itemDataSource, resources)
     }
 
     @Test
-    fun `initComponent call`() {
+    fun `initComponent with all success`() {
         //GIVEN
-        getByIdSuccessfullyWithDuplicateItem()
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
         val intent = Mockito.mock(Intent::class.java)
-        whenever(itemDataSource.getCountItems()).thenReturn(ZERO)
-        whenever(intent.getStringExtra(ITEM_ID)).thenReturn(ID_ITEM)
-        whenever(intent.getStringExtra(ITEM_TITLE).toString()).thenReturn(TITLE_ITEM)
-        whenever(intent.getDoubleExtra(ITEM_PRICE, 0.0)).thenReturn(PRICE_ITEM)
-        whenever(intent.getIntExtra(ITEM_SOLD_QUANTITY, 0)).thenReturn(SOLD_ITEM)
-        whenever(intent.getStringExtra(ITEM_THUMBNAIL).toString()).thenReturn(IMAGE_ITEM)
-        whenever(intent.getStringExtra(ITEM_PERMALINK).toString()).thenReturn(LINK_ITEM)
-        whenever(intent.getStringExtra(ITEM_CONDITION).toString()).thenReturn(NEW_CONDITION_ITEM)
-        whenever(resources.getString(R.string.usedState)).thenReturn(NEW_CONDITION_ITEM)
-
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
         //WHEN
         itemPresenter.initComponent(intent)
-
         //THEN
-        assertEquals(itemState.numberItem.get(), ZERO)
-        assertEquals(itemState.id.get(), ID_ITEM)
-        assertEquals(itemState.title.get(), TITLE_ITEM)
-        assertEquals(itemState.price.get(), PRICE_ITEM)
-        assertEquals(itemState.soldQuantity.get(), SOLD_ITEM)
-        assertEquals(itemState.thumbnail.get(), IMAGE_ITEM)
-        assertEquals(itemState.permaLink.get(), LINK_ITEM)
-        assertEquals(itemState.condition.get(), NEW_CONDITION_ITEM)
-        verify(itemDataSource).setIdRecentlySeenItem(ID_ITEM)
-        verify(itemView).retrieverExtras(any())
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
     }
 
     @Test
-    fun `setState by intent data`() {
+    fun `initComponent with getItemById fail with internet failure`() {
         //GIVEN
+        getItemByIdUnsuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
         val intent = Mockito.mock(Intent::class.java)
-        whenever(itemDataSource.getCountItems()).thenReturn(ZERO)
-        whenever(intent.getStringExtra(ITEM_ID)).thenReturn(ID_ITEM)
-        whenever(intent.getStringExtra(ITEM_TITLE).toString()).thenReturn(TITLE_ITEM)
-        whenever(intent.getDoubleExtra(ITEM_PRICE, 0.0)).thenReturn(PRICE_ITEM)
-        whenever(intent.getIntExtra(ITEM_SOLD_QUANTITY, 0)).thenReturn(SOLD_ITEM)
-        whenever(intent.getStringExtra(ITEM_THUMBNAIL).toString()).thenReturn(IMAGE_ITEM)
-        whenever(intent.getStringExtra(ITEM_PERMALINK).toString()).thenReturn(LINK_ITEM)
-        whenever(intent.getStringExtra(ITEM_CONDITION).toString()).thenReturn(NEW_CONDITION_ITEM)
-        whenever(resources.getString(R.string.usedState)).thenReturn(NEW_CONDITION_ITEM)
-
+        whenever(itemView.internetConnection()).thenReturn(false)
+        whenever(resources.getString(R.string.it_seems_there_is_no_internet)).thenReturn(
+            INTERNET_FAIL)
         //WHEN
-        itemPresenter.setState(intent)
+        itemPresenter.initComponent(intent)
         //THEN
-        assertEquals(itemState.numberItem.get(), ZERO)
-        assertEquals(itemState.id.get(), ID_ITEM)
-        assertEquals(itemState.title.get(), TITLE_ITEM)
-        assertEquals(itemState.price.get(), PRICE_ITEM)
-        assertEquals(itemState.soldQuantity.get(), SOLD_ITEM)
-        assertEquals(itemState.thumbnail.get(), IMAGE_ITEM)
-        assertEquals(itemState.permaLink.get(), LINK_ITEM)
-        assertEquals(itemState.condition.get(), NEW_CONDITION_ITEM)
-        verify(itemDataSource).setIdRecentlySeenItem(ID_ITEM)
+        verify(itemView).showSnackBarRed(INTERNET_FAIL)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
     }
 
     @Test
-    fun `translateCondition with "new" condition`() {
+    fun `initComponent with getItemById fail with out internet failure`() {
         //GIVEN
-        val condition = NEW_CONDITION_ITEM
-        whenever(resources.getString(R.string.newState)).thenReturn(NEW_CONDITION_ITEM)
-        whenever(resources.getString(R.string.newStateSpanish)).thenReturn(NEW_STATE)
+        getItemByIdUnsuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(itemView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(
+            SIMPLE_FAILED)
         //WHEN
-        itemPresenter.translateCondition(condition)
+        itemPresenter.initComponent(intent)
         //THEN
-        assertEquals(itemPresenter.translateCondition(condition), NEW_STATE)
+        verify(itemView).showSnackBar(SIMPLE_FAILED)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
     }
 
     @Test
-    fun `translateCondition with "used" condition`() {
+    fun `initComponent with getItemDescription fail`() {
         //GIVEN
-        val condition = USED_CONDITION_ITEM
-        whenever(resources.getString(R.string.newState)).thenReturn(NEW_CONDITION_ITEM)
-        whenever(resources.getString(R.string.usedState)).thenReturn(USED_STATE)
+        getItemByIdSuccessfully()
+        getItemDescriptionUnsuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(
+            SIMPLE_FAILED)
         //WHEN
-        itemPresenter.translateCondition(condition)
+        itemPresenter.initComponent(intent)
         //THEN
-        assertEquals(itemPresenter.translateCondition(condition), USED_STATE)
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).showSnackBar(SIMPLE_FAILED)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `initComponent with deInsertItem fail`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemUnsuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        //WHEN
+        itemPresenter.initComponent(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `initComponent with getById fail`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdUnsuccessfully()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        //WHEN
+        itemPresenter.initComponent(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `initComponent with getById duplicate item`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithDuplicateItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        //WHEN
+        itemPresenter.initComponent(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
     }
 
     @Test
@@ -148,53 +271,22 @@ class ItemPresenterTest {
         assertEquals(itemPresenter.dataBaseLimit(num), ZERO)
     }
 
-
-    @Test
-    fun `getState in var productResponse`() {
-        //GIVEN
-        itemState.numberItem.set(ZERO)
-        itemState.id.set(ID_ITEM)
-        itemState.title.set(TITLE_ITEM)
-        itemState.price.set(PRICE_ITEM)
-        itemState.soldQuantity.set(SOLD_ITEM)
-        itemState.thumbnail.set(IMAGE_ITEM)
-        itemState.permaLink.set(LINK_ITEM)
-        itemState.condition.set(NEW_CONDITION_ITEM)
-        //WHEN
-        val productResponse: ProductResponse = itemPresenter.getState()
-        //THEN
-        assertEquals(productResponse.numberItem, ZERO)
-        assertEquals(productResponse.id, ID_ITEM)
-        assertEquals(productResponse.title, TITLE_ITEM)
-        assertEquals(productResponse.price, PRICE_ITEM)
-        assertEquals(productResponse.soldQuantity, SOLD_ITEM)
-        assertEquals(productResponse.thumbnail, IMAGE_ITEM)
-        assertEquals(productResponse.permaLink, LINK_ITEM)
-        assertEquals(productResponse.condition, NEW_CONDITION_ITEM)
-
-    }
-
     @Test
     fun `saveItem successfully`() {
         //GIVEN
         dbInsertItemSuccessfully()
-        val item = Mockito.mock(ProductResponse::class.java)
-        whenever(resources.getString(R.string.saveSuccesfullyItem)).thenReturn(PRINT_RESPONSE)
         //WHEN
-        itemPresenter.saveItem(item)
+        itemPresenter.saveItem(ITEM_1)
         //THEN
-        assertEquals(PRINT_RESPONSE, out.toString().trim())
     }
 
     @Test
     fun `saveItem unsuccessfully`() {
         //GIVEN
         dbInsertItemUnsuccessfully()
-        val item = Mockito.mock(ProductResponse::class.java)
         //WHEN
-        itemPresenter.saveItem(item)
+        itemPresenter.saveItem(ITEM_1)
         //THEN
-        assertEquals(INSERT_FAIL, out.toString().trim())
     }
 
 
@@ -203,26 +295,19 @@ class ItemPresenterTest {
         //GIVEN
         getByIdSuccessfullyWithNewItem()
         dbInsertItemSuccessfully()
-        val item = Mockito.mock(ProductResponse::class.java)
-        whenever(item.id).thenReturn(ITEM_ID)
-        whenever(resources.getString(R.string.saveSuccesfullyItem)).thenReturn(PRINT_RESPONSE)
         //WHEN
-        itemPresenter.validateAndSaveInDb(item)
+        itemPresenter.validateAndSaveInDb(ITEM_1)
         //THEN
-        assertEquals(PRINT_RESPONSE, out.toString().trim())
+
     }
 
     @Test
     fun `success validateAndSaveItem with duplicate itemId in database `() {
         //GIVEN
         getByIdSuccessfullyWithDuplicateItem()
-        val item = Mockito.mock(ProductResponse::class.java)
-        whenever(item.id).thenReturn(ITEM_ID)
-        whenever(resources.getString(R.string.existing_id_in_database)).thenReturn(PRINT_DUPLICATE)
         //WHEN
-        itemPresenter.validateAndSaveInDb(item)
+        itemPresenter.validateAndSaveInDb(ITEM_1)
         //THEN
-        assertEquals(PRINT_DUPLICATE, out.toString().trim())
     }
 
     @Test
@@ -231,20 +316,291 @@ class ItemPresenterTest {
         getByIdUnsuccessfully()
         val item = Mockito.mock(ProductResponse::class.java)
         whenever(item.id).thenReturn(ITEM_ID)
-            //WHEN
+        //WHEN
         itemPresenter.validateAndSaveInDb(item)
         //THEN
-        assertEquals(ITEM_FAIL, out.toString().trim())
     }
 
     @Test
-    fun `navigateToMELI`() {
+    fun `navigateToMeli call`() {
+        //GIVEN
+        whenever(itemDataSource.getPermalinkRecentlySeenItem()).thenReturn(ITEM_1.permaLink)
+        //WHEN
+        itemPresenter.navigateToMeli()
+        //THEN
+        verify(itemView).startMELI(ITEM_1.permaLink)
+    }
+
+
+    @Test
+    fun `navigateToShared call`() {
+        //GIVEN
+        whenever(itemDataSource.getPermalinkRecentlySeenItem()).thenReturn(ITEM_1.permaLink)
+        //WHEN
+        itemPresenter.navigateToShared()
+        //THEN
+        verify(itemView).sharedItem(ITEM_1.permaLink)
+    }
+
+    @Test
+    fun `navigateToSearch call`() {
         //GIVEN
         //WHEN
-        itemPresenter.navigateToMELI()
+        itemPresenter.navigateToSearch()
         //THEN
-        verify(itemView).navigateToMELI(any())
+        verify(itemView).startSearch()
     }
+
+    @Test
+    fun `back is clicked`() {
+        //GIVEN
+        //WHEN
+        itemPresenter.back()
+        //THEN
+        verify(itemView).back()
+    }
+
+    @Test
+    fun `internetFail call`() {
+        //GIVEN
+        whenever(resources.getString(R.string.it_seems_there_is_no_internet)).thenReturn(
+            INTERNET_FAIL)
+        //WHEN
+        itemPresenter.internetFail()
+        //THEN
+        verify(itemView).showSnackBarRed(INTERNET_FAIL)
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent with all success`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        //WHEN
+        itemPresenter.refreshButton(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent with getItemById fail with internet failure`() {
+        //GIVEN
+        getItemByIdUnsuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(itemView.internetConnection()).thenReturn(false)
+        whenever(resources.getString(R.string.it_seems_there_is_no_internet)).thenReturn(
+            INTERNET_FAIL)
+        //WHEN
+        itemPresenter.refreshButton(intent)
+        //THEN
+        verify(itemView).showSnackBarRed(INTERNET_FAIL)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent with getItemById fail with out internet failure`() {
+        //GIVEN
+        getItemByIdUnsuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(itemView.internetConnection()).thenReturn(true)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(
+            SIMPLE_FAILED)
+        //WHEN
+        itemPresenter.refreshButton(intent)
+        //THEN
+        verify(itemView).showSnackBar(SIMPLE_FAILED)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent with getItemDescription fail`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionUnsuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        whenever(resources.getString(R.string.simple_error_message)).thenReturn(
+            SIMPLE_FAILED)
+        //WHEN
+        itemPresenter.refreshButton(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).showSnackBar(SIMPLE_FAILED)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent with deInsertItem fail`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemUnsuccessfully()
+        getByIdSuccessfullyWithNewItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        //WHEN
+        itemPresenter.refreshButton(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent with getById fail`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdUnsuccessfully()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        //WHEN
+        itemPresenter.refreshButton(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `refresh button is pressed and initComponent with getById duplicate item`() {
+        //GIVEN
+        getItemByIdSuccessfully()
+        getItemDescriptionSuccessfully()
+        dbInsertItemSuccessfully()
+        getByIdSuccessfullyWithDuplicateItem()
+        val intent = Mockito.mock(Intent::class.java)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn("NUEVO")
+        whenever(resources.getString(R.string.newState)).thenReturn("new")
+        val condition = itemPresenter.translateCondition(ITEM_1.condition)
+        whenever(resources.getString(R.string.state_sold,
+            condition,
+            ITEM_1.soldQuantity)).thenReturn("Estado $condition / Vendidos ${ITEM_1.soldQuantity}")
+        whenever(resources.getString(R.string.stock,
+            ITEM_1.stock)).thenReturn("Stock Disponible ${ITEM_1.stock} unidades")
+        val state = resources.getString(R.string.state_sold, condition, ITEM_1.soldQuantity)
+        val price = FormatNumber.formatNumber(ITEM_1.price)
+        val stock = resources.getString(R.string.stock, ITEM_1.stock)
+        //WHEN
+        itemPresenter.refreshButton(intent)
+        //THEN
+        verify(itemView).retrieveExtras(ITEM_1.title, state, price, ITEM_1.thumbnail, stock)
+        verify(itemDataSource).setIdRecentlySeenItem(ITEM_1.id)
+        verify(itemDataSource).setPermalinkRecentlySeenItem(ITEM_1.permaLink)
+        verify(itemView).setDescription(DESCRIPTION)
+        verify(itemView).navigateToSearch()
+        verify(itemView).navigateToMeli()
+        verify(itemView).navigateToSearch()
+        verify(itemView).onBack()
+    }
+
+    @Test
+    fun `translateCondition with new condition`() {
+        //GIVEN
+        val condition = NEW_CONDITION_ITEM
+        whenever(resources.getString(R.string.newState)).thenReturn(NEW_CONDITION_ITEM)
+        whenever(resources.getString(R.string.newStateSpanish)).thenReturn(NEW_STATE)
+        //WHEN
+        itemPresenter.translateCondition(condition)
+        //THEN
+        assertEquals(itemPresenter.translateCondition(condition), NEW_STATE)
+    }
+
+    @Test
+    fun `translateCondition with used condition`() {
+        //GIVEN
+        val condition = USED_CONDITION_ITEM
+        whenever(resources.getString(R.string.newState)).thenReturn(NEW_CONDITION_ITEM)
+        whenever(resources.getString(R.string.usedState)).thenReturn(USED_STATE)
+        //WHEN
+        itemPresenter.translateCondition(condition)
+        //THEN
+        assertEquals(itemPresenter.translateCondition(condition), USED_STATE)
+    }
+
 
     private fun dbInsertItemSuccessfully() {
         val success = argumentCaptor<() -> Unit>()
@@ -264,13 +620,39 @@ class ItemPresenterTest {
         val success = argumentCaptor<() -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
         val responseError = Mockito.mock(Throwable::class.java)
-        whenever(responseError.message).thenReturn(INSERT_FAIL)
         whenever(itemDataSource.dbInsertItem(
             any(),
             success.capture(),
             error.capture()
         )
         ).thenAnswer {
+            error.firstValue.invoke(responseError)
+            mockDisposable
+        }
+    }
+
+    private fun getItemByIdSuccessfully() {
+        val success = argumentCaptor<(ProductResponse) -> Unit>()
+        val error = argumentCaptor<(Throwable) -> Unit>()
+        whenever(itemDataSource.getItemById(
+            any(),
+            success.capture(),
+            error.capture()
+        )).thenAnswer {
+            success.firstValue.invoke(ITEM_1)
+            mockDisposable
+        }
+    }
+
+    private fun getItemByIdUnsuccessfully() {
+        val success = argumentCaptor<(ProductResponse) -> Unit>()
+        val error = argumentCaptor<(Throwable) -> Unit>()
+        val responseError = Mockito.mock(Throwable::class.java)
+        whenever(itemDataSource.getItemById(
+            any(),
+            success.capture(),
+            error.capture()
+        )).thenAnswer {
             error.firstValue.invoke(responseError)
             mockDisposable
         }
@@ -308,7 +690,6 @@ class ItemPresenterTest {
         val success = argumentCaptor<(Int) -> Unit>()
         val error = argumentCaptor<(Throwable) -> Unit>()
         val responseError = Mockito.mock(Throwable::class.java)
-        whenever(responseError.message).thenReturn(ITEM_FAIL)
         whenever(itemDataSource.getById(
             any(),
             success.capture(),
@@ -319,26 +700,47 @@ class ItemPresenterTest {
         }
     }
 
+    private fun getItemDescriptionSuccessfully() {
+        val success = argumentCaptor<(DescriptionResponse) -> Unit>()
+        val error = argumentCaptor<(Throwable) -> Unit>()
+        val descriptionResponse = Mockito.mock(DescriptionResponse::class.java)
+        whenever(descriptionResponse.plainText).thenReturn(DESCRIPTION)
+        whenever(itemDataSource.getItemDescription(
+            any(),
+            success.capture(),
+            error.capture()
+        )).thenAnswer {
+            success.firstValue.invoke(descriptionResponse)
+            mockDisposable
+        }
+    }
+
+    private fun getItemDescriptionUnsuccessfully() {
+        val success = argumentCaptor<(DescriptionResponse) -> Unit>()
+        val error = argumentCaptor<(Throwable) -> Unit>()
+        val responseError = Mockito.mock(Throwable::class.java)
+        whenever(itemDataSource.getItemDescription(
+            any(),
+            success.capture(),
+            error.capture()
+        )).thenAnswer {
+            error.firstValue.invoke(responseError)
+            mockDisposable
+        }
+    }
 
     companion object {
-
-        const val INSERT_FAIL = "FALLA AL INSERTAR ITEM"
-        const val ITEM_FAIL = "FALLA: no se obtuvo item"
+        private val ITEM_1 =
+            ProductResponse(1, "item1", "product1", "", "new", 0.0, 0, "product1.com", 0)
+        const val DESCRIPTION = "this is a product"
+        const val INTERNET_FAIL = "¡Parece que no hay internet!"
+        const val SIMPLE_FAILED = "Ups algo salio mal, vuelve a intentarlo"
         const val ONE = 1
         const val TWO = 2
         const val ZERO = 0
-        const val ID_ITEM = "idItem"
-        const val TITLE_ITEM = "titleItem"
-        const val PRICE_ITEM = 10.10
-        const val SOLD_ITEM = 5
-        const val IMAGE_ITEM = "phone"
-        const val LINK_ITEM = "phoneLink"
         const val NEW_CONDITION_ITEM = "new"
         const val USED_CONDITION_ITEM = "used"
         const val NEW_STATE = "NUEVO"
         const val USED_STATE = "USADO"
-        const val PRINT_RESPONSE = "save successfully item in database"
-        const val PRINT_DUPLICATE = "Existing ID in database"
-    }
-
-}*/
+        }
+}

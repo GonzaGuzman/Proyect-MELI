@@ -40,7 +40,6 @@ class HomeActivity : AppCompatActivity(), HomeView,
     private val dataBase = AppController.database
     private val homeRepository = HomeRepository(apiService, dataBase)
     private val homeDataSourceImplements = HomeDatasourceImplements(homeRepository)
-    private var databaseIsEmpty = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,10 +67,6 @@ class HomeActivity : AppCompatActivity(), HomeView,
 
     override fun onOffRecyclerView(validate: Boolean) {
         binding.itemRecentlySeen.viewRecently.isVisible = validate
-    }
-
-    override fun validateDatabaseEmptyData(validate: Boolean) {
-        databaseIsEmpty = validate
     }
 
     override fun loadRecentlySeen(title: String, price: String, thumbnail: String) {
@@ -119,8 +114,7 @@ class HomeActivity : AppCompatActivity(), HomeView,
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.itHistorial -> homePresenter.showHistorial()
-            R.id.itClearHistorial -> if (!databaseIsEmpty) homePresenter.deleteDialog() else showSnackBar(
-                getString(R.string.empty_database_message))
+            R.id.itClearHistorial -> homePresenter.deleteDialog()
         }
         return true
     }

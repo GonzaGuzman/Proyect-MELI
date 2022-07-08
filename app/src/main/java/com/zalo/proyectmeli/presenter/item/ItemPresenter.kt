@@ -29,13 +29,7 @@ class ItemPresenter(
         compositeDisposable.add(
             itemDatasource.getItemById(id,
                 {
-                    val condition = translateCondition(it.condition)
-                    val title = it.title
-                    val thumbnail = it.thumbnail
-                    val state = resources.getString(R.string.state_sold, condition, it.soldQuantity)
-                    val price = FormatNumber.formatNumber(it.price)
-                    val stock = resources.getString(R.string.stock, it.stock)
-                    itemView.retrieveExtras(title, state, price, thumbnail, stock)
+                    setRetrieveExtras(it)
                     itemDatasource.setIdRecentlySeenItem(it.id)
                     itemDatasource.setPermalinkRecentlySeenItem(it.permaLink)
                     validateAndSaveInDb(it)
@@ -46,6 +40,16 @@ class ItemPresenter(
                 }
             )
         )
+    }
+
+    private fun setRetrieveExtras(item: ProductResponse){
+        val condition = translateCondition(item.condition)
+        val title = item.title
+        val thumbnail = item.thumbnail
+        val state = resources.getString(R.string.state_sold, condition, item.soldQuantity)
+        val price = FormatNumber.formatNumber(item.price)
+        val stock = resources.getString(R.string.stock, item.stock)
+        itemView.retrieveExtras(title, state, price, thumbnail, stock)
     }
 
     override fun validateAndSaveInDb(item: ProductResponse) {
@@ -78,7 +82,7 @@ class ItemPresenter(
         compositeDisposable.add(
             itemDatasource.getItemDescription(id,
                 { itemView.setDescription(it.plainText) },
-                { }
+                { itemView.showSnackBar(resources.getString(R.string.simple_error_message)) }
             )
         )
     }
@@ -101,9 +105,7 @@ class ItemPresenter(
 
     override fun refreshButton(intent: Intent) = initComponent(intent)
     override fun translateCondition(condition: String): String =
-        if (condition == resources.getString(
-                R.string.newState)
-        ) resources.getString(R.string.newStateSpanish) else resources.getString(R.string.usedState)
+        if (condition == resources.getString(R.string.newState)) resources.getString(R.string.newStateSpanish) else resources.getString(R.string.usedState)
 }
 
 
